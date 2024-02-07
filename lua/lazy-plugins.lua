@@ -207,7 +207,7 @@ require('lazy').setup({
     config = function()
       require("nvim-tree").setup {}
     end,
-  },
+},
 
 
   -- Compiler.nvim
@@ -280,7 +280,49 @@ require('lazy').setup({
         search_back = true,
       })
     end
+  },
+  {
+    'romgrk/barbar.nvim',
+    dependencies = {
+      'lewis6991/gitsigns.nvim',     -- OPTIONAL: for git status
+      'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
+    },
+    init = function() vim.g.barbar_auto_setup = false end,
+    opts = {
+      -- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
+      -- animation = true,
+      -- insert_at_start = true,
+      -- …etc.
+      animation = true,
+      tabpages = true,
+
+
+      sidebar_filetypes = {
+        -- Use the default values: {event = 'BufWinLeave', text = nil}
+        NvimTree = true,
+        -- Or, specify the text used for the offset:
+        undotree = { text = 'undotree' },
+        -- Or, specify the event which the sidebar executes when leaving:
+        --['neo-tree'] = { event = 'BufWipeout' },
+        -- Or, specify both
+        --Outline = { event = 'BufWinLeave', text = 'symbols-outline' },
+      },
+    },
+    version = '^1.0.0', -- optional: only update when a new 1.x version is released
+  },
+  {
+    "jiaoshijie/undotree",
+    dependencies = "nvim-lua/plenary.nvim",
+    config = true,
+    keys = { -- load the plugin only when using it's keybinding:
+      { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
+    },
+  },
+  {
+    -- amongst your other plugins
+    { 'akinsho/toggleterm.nvim', version = "*", config = true }
   }
+
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -295,5 +337,4 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   -- { import = 'custom.plugins' },
 }, {})
-
 -- vim: ts=2 sts=2 sw=2 et
