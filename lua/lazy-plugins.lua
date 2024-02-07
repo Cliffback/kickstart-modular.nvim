@@ -295,6 +295,7 @@ require('lazy').setup({
       -- …etc.
       animation = true,
       tabpages = true,
+      auto_hide = 0,
 
 
       sidebar_filetypes = {
