@@ -322,7 +322,8 @@ require('lazy').setup({
   {
     -- amongst your other plugins
     { 'akinsho/toggleterm.nvim', version = "*", config = true },
-    { 'Hoffs/omnisharp-extended-lsp.nvim' }
+    { 'Hoffs/omnisharp-extended-lsp.nvim' },
+    { 'mfussenegger/nvim-dap' }
   }
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
