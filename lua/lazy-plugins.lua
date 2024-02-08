@@ -207,7 +207,7 @@ require('lazy').setup({
     config = function()
       require("nvim-tree").setup {}
     end,
-},
+  },
 
 
   -- Compiler.nvim
@@ -315,13 +315,14 @@ require('lazy').setup({
     "jiaoshijie/undotree",
     dependencies = "nvim-lua/plenary.nvim",
     config = true,
-    keys = { -- load the plugin only when using it's keybinding:
-      { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
-    },
+    -- keys = { -- load the plugin only when using it's keybinding:
+    --   { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
+    -- },
   },
   {
     -- amongst your other plugins
-    { 'akinsho/toggleterm.nvim', version = "*", config = true }
+    { 'akinsho/toggleterm.nvim', version = "*", config = true },
+    { 'Hoffs/omnisharp-extended-lsp.nvim' }
   }
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart

@@ -184,6 +184,6 @@ vim.keymap.set('n', '<leader>u', require('undotree').toggle, { noremap = true, s
 -- :BarbarEnable - enables barbar (enabled by default)
 -- :BarbarDisable - very bad command, should never be used
 
-
+vim.keymap.set('n', '<C-f>', '<cmd>Format<CR>', {noremap = true, silent = true, desc = 'Format document'})
 
 -- vim: ts=2 sts=2 sw=2 et

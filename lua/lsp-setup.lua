@@ -18,7 +18,8 @@ local on_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+  --nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
@@ -108,12 +109,31 @@ mason_lspconfig.setup {
 
 mason_lspconfig.setup_handlers {
   function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
+    if server_name == "omnisharp" then
+      local pid = vim.fn.getpid()
+      local omnisharp_bin = "/Users/mathias.eek/.local/share/nvim/mason/packages/omnisharp/omnisharp"
+
+      local config = {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = servers['omnisharp'],
+        filetypes = (servers['omnisharp'] or {}).filetypes,
+        handlers = {
+          ["textDocument/definition"] = require('omnisharp_extended').handler,
+        },
+        cmd = { omnisharp_bin, '--languageserver', '--hostPID', tostring(pid) },
+        -- rest of your settings
+      }
+
+      require 'lspconfig'.omnisharp.setup(config)
+    else
+      require('lspconfig')[server_name].setup {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = servers[server_name],
+        filetypes = (servers[server_name] or {}).filetypes,
+      }
+    end
   end,
 }
 

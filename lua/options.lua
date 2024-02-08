@@ -228,4 +228,14 @@ require("toggleterm").setup({
   },
 })
 
+-- Set max width for hover window
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, {
+    -- Set the maximum width
+    max_width = 80,
+    --max_height = 30,
+    border = 'rounded'
+  }
+)
+
 -- vim: ts=2 sts=2 sw=2 et
