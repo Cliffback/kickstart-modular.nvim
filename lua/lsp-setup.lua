@@ -75,6 +75,8 @@ require('mason-lspconfig').setup()
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+
+
 local servers = {
   -- clangd = {},
   -- gopls = {},
@@ -107,33 +109,21 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
+local handlers = {
+  omnisharp = {
+    ["textDocument/definition"] = require('omnisharp_extended').handler,
+  }
+}
+
 mason_lspconfig.setup_handlers {
   function(server_name)
-    if server_name == "omnisharp" then
-      local pid = vim.fn.getpid()
-      local omnisharp_bin = "/Users/mathias.eek/.local/share/nvim/mason/packages/omnisharp/omnisharp"
-
-      local config = {
-        capabilities = capabilities,
-        on_attach = on_attach,
-        settings = servers['omnisharp'],
-        filetypes = (servers['omnisharp'] or {}).filetypes,
-        handlers = {
-          ["textDocument/definition"] = require('omnisharp_extended').handler,
-        },
-        cmd = { omnisharp_bin, '--languageserver', '--hostPID', tostring(pid) },
-        -- rest of your settings
-      }
-
-      require 'lspconfig'.omnisharp.setup(config)
-    else
       require('lspconfig')[server_name].setup {
         capabilities = capabilities,
         on_attach = on_attach,
         settings = servers[server_name],
         filetypes = (servers[server_name] or {}).filetypes,
+        handlers = handlers[server_name]
       }
-    end
   end,
 }
 
