@@ -223,7 +223,7 @@ require('lazy').setup({
     commit = "400e762648b70397d0d315e5acaf0ff3597f2d8b",
     cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
     opts = {
-      task_list = {
+ task_list = {
         direction = "bottom",
         min_height = 25,
         max_height = 25,
@@ -232,7 +232,7 @@ require('lazy').setup({
     },
   },
   -- plugins/rest.lua
-  {
+{
     "rest-nvim/rest.nvim",
     dependencies = { { "nvim-lua/plenary.nvim" } },
     config = function()
@@ -293,8 +293,9 @@ require('lazy').setup({
       -- animation = true,
       -- insert_at_start = true,
       -- …etc.
-      animation = true,
+      animation = false,
       tabpages = true,
+      insert_at_end = true,
       auto_hide = 0,
 
 
