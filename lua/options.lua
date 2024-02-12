@@ -238,4 +238,5 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   }
 )
 
+require("dbee").setup()
 -- vim: ts=2 sts=2 sw=2 et

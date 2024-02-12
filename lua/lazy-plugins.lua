@@ -212,7 +212,7 @@ require('lazy').setup({
 
   -- Compiler.nvim
   {
-    "Zeioth/compiler.nvim",
+    "Cliffback/compiler.nvim",
     cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
     dependencies = { "stevearc/overseer.nvim" },
     opts = {},
@@ -223,7 +223,7 @@ require('lazy').setup({
     commit = "400e762648b70397d0d315e5acaf0ff3597f2d8b",
     cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
     opts = {
- task_list = {
+      task_list = {
         direction = "bottom",
         min_height = 25,
         max_height = 25,
@@ -232,7 +232,7 @@ require('lazy').setup({
     },
   },
   -- plugins/rest.lua
-{
+  {
     "rest-nvim/rest.nvim",
     dependencies = { { "nvim-lua/plenary.nvim" } },
     config = function()
@@ -322,16 +322,35 @@ require('lazy').setup({
   },
   {
     -- amongst your other plugins
-    { 'akinsho/toggleterm.nvim', version = "*", config = true },
+    { 'akinsho/toggleterm.nvim',          version = "*", config = true },
     { 'Hoffs/omnisharp-extended-lsp.nvim' },
-    { 'mfussenegger/nvim-dap' }
-  }
+  },
+  {
+    "kndndrj/nvim-dbee",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+    build = function()
+      -- Install tries to automatically detect the install method.
+      -- if it fails, try calling it with one of these parameters:
+      --    "curl", "wget", "bitsadmin", "go"
+      require("dbee").install()
+    end,
+    config = function()
+      require("dbee").setup( --[[optional config]])
+    end,
+  },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.debug',
+  {
+    "windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
+  }
+
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping

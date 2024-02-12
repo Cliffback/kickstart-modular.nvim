@@ -187,30 +187,30 @@ vim.keymap.set('n', '<leader>u', require('undotree').toggle, { noremap = true, s
 vim.keymap.set('n', '<C-f>', '<cmd>Format<CR>', { noremap = true, silent = true, desc = 'Format document' })
 
 
-vim.keymap.set('n', '<F9>', function() require('dap').continue() end)
-vim.keymap.set('n', '<F10>', function() require('dap').step_over() end)
-vim.keymap.set('n', '<F11>', function() require('dap').step_into() end)
-vim.keymap.set('n', '<F12>', function() require('dap').step_out() end)
-vim.keymap.set('n', '<Leader>db', function() require('dap').toggle_breakpoint() end)
-vim.keymap.set('n', '<Leader>dB', function() require('dap').set_breakpoint() end)
-vim.keymap.set('n', '<Leader>lm',
-  function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
-vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
-vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
-vim.keymap.set({ 'n', 'v' }, '<Leader>dh', function()
-  require('dap.ui.widgets').hover()
-end)
-vim.keymap.set({ 'n', 'v' }, '<Leader>dp', function()
-  require('dap.ui.widgets').preview()
-end)
-vim.keymap.set('n', '<Leader>df', function()
-  local widgets = require('dap.ui.widgets')
-  widgets.centered_float(widgets.frames)
-end)
-vim.keymap.set('n', '<Leader>ds', function()
-  local widgets = require('dap.ui.widgets')
-  widgets.centered_float(widgets.scopes)
-end)
+--vim.keymap.set('n', '<F9>', function() require('dap').continue() end)
+--vim.keymap.set('n', '<F10>', function() require('dap').step_over() end)
+--vim.keymap.set('n', '<F11>', function() require('dap').step_into() end)
+--vim.keymap.set('n', '<F12>', function() require('dap').step_out() end)
+--vim.keymap.set('n', '<Leader>db', function() require('dap').toggle_breakpoint() end)
+--vim.keymap.set('n', '<Leader>dB', function() require('dap').set_breakpoint() end)
+--vim.keymap.set('n', '<Leader>lm',
+--  function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+--vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
+--vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
+--vim.keymap.set({ 'n', 'v' }, '<Leader>dh', function()
+--  require('dap.ui.widgets').hover()
+--end)
+--vim.keymap.set({ 'n', 'v' }, '<Leader>dp', function()
+--  require('dap.ui.widgets').preview()
+--end)
+--vim.keymap.set('n', '<Leader>df', function()
+--  local widgets = require('dap.ui.widgets')
+--  widgets.centered_float(widgets.frames)
+--end)
+--vim.keymap.set('n', '<Leader>ds', function()
+--  local widgets = require('dap.ui.widgets')
+--  widgets.centered_float(widgets.scopes)
+--end)
 
 
 -- lsp keymaps
@@ -255,7 +255,30 @@ function M.set_lsp_keymaps(_,bufnr)
 
 end
 
+vim.keymap.set("n", "<A-h>", "<C-w>h")
+vim.keymap.set("n", "<A-j>", "<C-w>j")
+vim.keymap.set("n", "<A-k>", "<C-w>k")
+vim.keymap.set("n", "<A-l>", "<C-w>l")
+
+-- terminal
+vim.keymap.set("t", "<A-h>", "<cmd>wincmd h<CR>")
+vim.keymap.set("t", "<A-j>", "<cmd>wincmd j<CR>")
+vim.keymap.set("t", "<A-k>", "<cmd>wincmd k<CR>")
+vim.keymap.set("t", "<A-l>", "<cmd>wincmd l<CR>")
+
+vim.keymap.set("n", "<A-Up>", ":resize -2<CR>")
+vim.keymap.set("n", "<A-Down>", ":resize +2<CR>")
+vim.keymap.set("n", "<A-Left>", ":vertical resize -2<CR>")
+vim.keymap.set("n", "<A-Right>", ":vertical resize +2<CR>")
+
+-- terminal
+vim.keymap.set("t", "<A-Up>", "<cmd>resize -2<CR>")
+vim.keymap.set("t", "<A-Down>", "<cmd>resize +2<CR>")
+vim.keymap.set("t", "<A-Left>", "<cmd>vertical resize -2<CR>")
+vim.keymap.set("t", "<A-Right>", "<cmd>vertical resize +2<CR>")
+
+vim.keymap.set("n", "<leader>db", function() require("dbee").open() end, { noremap = true, silent = true, desc = 'Open Database Browser' })
+
+
 return M
-
-
 -- vim: ts=2 sts=2 sw=2 et
