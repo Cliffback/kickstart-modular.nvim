@@ -2,6 +2,10 @@
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
+-- Enable line breaks
+vim.opt.linebreak = true
+vim.opt.breakat = " \t,-"
+
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -182,6 +186,12 @@ require("nvim-tree").setup({
     dotfiles = true,
   },
   on_attach = my_on_attach,
+  sync_root_with_cwd = true,
+  respect_buf_cwd = true,
+  update_focused_file = {
+    enable = true,
+    update_root = true
+  },
 })
 
 local undotree = require('undotree')

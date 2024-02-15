@@ -212,7 +212,7 @@ require('lazy').setup({
 
   -- Compiler.nvim
   {
-    "Cliffback/compiler.nvim",
+    "Zeioth/compiler.nvim",
     cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
     dependencies = { "stevearc/overseer.nvim" },
     opts = {},
@@ -349,7 +349,31 @@ require('lazy').setup({
   {
     "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
+  },
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+  },
+  {
+    "ahmedkhalf/project.nvim",
+    config = function()
+      require("project_nvim").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
+    end
+  },
+  {
+    "Cliffback/nvim-dap-netcoredbg-macOS-arm64",
+    dependencies = { "mfussenegger/nvim-dap" }
   }
+
 
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`

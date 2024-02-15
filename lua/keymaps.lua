@@ -216,7 +216,7 @@ vim.keymap.set('n', '<C-f>', '<cmd>Format<CR>', { noremap = true, silent = true,
 -- lsp keymaps
 local M = {}
 
-function M.set_lsp_keymaps(_,bufnr)
+function M.set_lsp_keymaps(_, bufnr)
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -252,7 +252,6 @@ function M.set_lsp_keymaps(_,bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
-
 end
 
 vim.keymap.set("n", "<A-h>", "<C-w>h")
@@ -277,8 +276,36 @@ vim.keymap.set("t", "<A-Down>", "<cmd>resize +2<CR>")
 vim.keymap.set("t", "<A-Left>", "<cmd>vertical resize -2<CR>")
 vim.keymap.set("t", "<A-Right>", "<cmd>vertical resize +2<CR>")
 
-vim.keymap.set("n", "<leader>db", function() require("dbee").open() end, { noremap = true, silent = true, desc = 'Open Database Browser' })
+vim.keymap.set("n", "<leader>db", function() require("dbee").open() end,
+  { noremap = true, silent = true, desc = 'Open Database Browser' })
+
+-- Trouble
+vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end,
+  { noremap = true, silent = true, desc = 'Toggle Trouble' })
+vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end,
+  { noremap = true, silent = true, desc = 'Toggle Workspace Diagnostics' })
+vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end,
+  { noremap = true, silent = true, desc = 'Toggle Document Diagnostics' })
+--vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end,
+--  { noremap = true, silent = true, desc = 'Toggle Quickfix' })
+--vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end,
+--  { noremap = true, silent = true, desc = 'Toggle Location List' })
+vim.keymap.set("n", "<leader>xr", function() require("trouble").toggle("lsp_references") end,
+  { noremap = true, silent = true, desc = 'Toggle LSP References' })
+--vim.keymap.set("n", "<leader>xf", function() require("trouble").toggle("lsp_definitions") end,
+--  { noremap = true, silent = true, desc = 'Toggle LSP Definitions' })
+--vim.keymap.set("n", "<leader>xt", function() require("trouble").toggle("lsp_type_definitions") end,
+--  { noremap = true, silent = true, desc = 'Toggle LSP Type Definitions' })
+vim.keymap.set("n", "<leader>xR", function() require("trouble").TroubleRefresh() end,
+  { noremap = true, silent = true, desc = 'Refresh Active List' })
+
+-- Telescop projects
+
+vim.keymap.set("n", "<leader>sp", ":Telescope projects<CR>",
+  { noremap = true, silent = true, desc = '[S]earch Recent [P]rojects' })
 
 
 return M
+
+
 -- vim: ts=2 sts=2 sw=2 et

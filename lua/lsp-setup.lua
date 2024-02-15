@@ -3,7 +3,7 @@
 local keymaps = require('keymaps')
 
 local on_attach = function(_, bufnr)
-      keymaps.set_lsp_keymaps(_,bufnr)
+  keymaps.set_lsp_keymaps(_, bufnr)
 
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
@@ -11,7 +11,7 @@ local on_attach = function(_, bufnr)
   --
   -- In this case, we create a function that lets us more easily define mappings specific
   -- for LSP related items. It sets the mode, buffer and description for us each time.
-  end
+end
 
 -- document existing key chains
 require('which-key').register {
@@ -53,7 +53,6 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -86,13 +85,13 @@ local handlers = {
 
 mason_lspconfig.setup_handlers {
   function(server_name)
-      require('lspconfig')[server_name].setup {
-        capabilities = capabilities,
-        on_attach = on_attach,
-        settings = servers[server_name],
-        filetypes = (servers[server_name] or {}).filetypes,
-        handlers = handlers[server_name]
-      }
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name],
+      filetypes = (servers[server_name] or {}).filetypes,
+      handlers = handlers[server_name]
+    }
   end,
 }
 
