@@ -366,12 +366,20 @@ require('lazy').setup({
         -- your configuration comes here
         -- or leave it empty to use the default settings
         -- refer to the configuration section below
+        manual_mode = true,
+        detection_methods = { "pattern", "lsp" },
+        patterns = { ".csproj", "package.json" },
+        silten_chdir = false,
+
       }
     end
   },
   {
-    "Cliffback/nvim-dap-netcoredbg-macOS-arm64",
+    "Cliffback/netcoredbg-macOS-arm64.nvim",
     dependencies = { "mfussenegger/nvim-dap" }
+  },
+  {
+    "NvChad/nvim-colorizer.lua"
   }
 
 

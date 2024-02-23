@@ -43,7 +43,7 @@ return {
 
 
     -- Overwrites the default config for netcoredbg with mason, as no Apple Silicone builds are provided. This requires compilation and installation from the official repo
-    require('nvim-dap-netcoredbg-macOS-arm64').setup(require('dap'))
+    require('netcoredbg-macOS-arm64').setup(require('dap'))
 
 
     -- Basic debugging keymaps, feel free to change to your liking!
