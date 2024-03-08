@@ -9,6 +9,13 @@ require('telescope').setup {
       },
     },
   },
+  pickers = {
+    find_files = {
+      -- Don't use gitignore with find files
+      find_command = { "rg", "--files", "--hidden", "--ignore", "-u", "--glob=!**/.git/*", "--glob=!**/node_modules/*" },
+
+    },
+  },
 }
 
 -- Enable telescope fzf native, if installed

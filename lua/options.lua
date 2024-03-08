@@ -183,9 +183,15 @@ require("nvim-tree").setup({
     group_empty = true
   },
   filters = {
-    dotfiles = true,
+    dotfiles = false,
   },
   on_attach = my_on_attach,
+  -- Don't use gitignore
+  git = {
+    enable = true,
+    ignore = false,
+    timeout = 500,
+  },
 })
 
 local undotree = require('undotree')
