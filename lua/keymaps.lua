@@ -304,8 +304,13 @@ vim.keymap.set("n", "<leader>xR", function() require("trouble").TroubleRefresh()
 vim.keymap.set("n", "<leader>sp", ":Telescope projects<CR>",
   { noremap = true, silent = true, desc = '[S]earch Recent [P]rojects' })
 
+-- MarkdownPreview
+vim.keymap.set("n", "<C-s>", "<cmd>MarkdownPreview<CR>", { noremap = true, silent = true, desc = 'MarkdownPreviewStart' })
+vim.keymap.set("n", "<M-s>", "<cmd>MarkdownPreviewStop<CR>",
+  { noremap = true, silent = true, desc = 'MarkdownPreviewStop' })
+vim.keymap.set("n", "<C-p>", "<cmd>MarkdownPreviewToggle<CR>",
+  { noremap = true, silent = true, desc = 'MarkdownPreviewToggle' })
 
 return M
-
 
 -- vim: ts=2 sts=2 sw=2 et
