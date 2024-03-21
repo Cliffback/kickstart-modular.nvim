@@ -196,7 +196,7 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim",     name = "catppuccin", priority = 1000 },
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",
@@ -390,6 +390,8 @@ require('lazy').setup({
     end,
     ft = { "markdown" },
   },
+  { "b0o/schemastore.nvim" },
+
 
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`

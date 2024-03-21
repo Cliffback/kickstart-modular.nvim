@@ -53,6 +53,36 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  yamlls = {
+
+    yaml = {
+      schemaStore = {
+        enable = false,
+        url = "",
+      },
+      schemas = require('schemastore').yaml.schemas {
+        -- select subset from the JSON schema catalog
+        --select = {
+        --  'kustomization.yaml',
+        --  'bitbucket-pipelisnes'
+        --},
+
+        -- additional schemas (not in the catalog)
+        --extra = {
+        --  url = 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/argoproj.io/application_v1alpha1.json',
+        --  name = 'Argo CD Application',
+        --  fileMatch = 'argocd-application.yaml'
+        --}
+      },
+      format = {
+        enable = true,
+        singleQuote = false,
+        bracketSpacing = true
+      },
+      validate = true,
+      completion = true
+    }
+  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
