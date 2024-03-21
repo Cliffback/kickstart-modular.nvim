@@ -53,7 +53,9 @@ end
 vim.api.nvim_set_keymap('n', '<F6>', "<cmd>CompilerOpen<cr>", { noremap = true, silent = true })
 
 -- Stop the compiler
-vim.api.nvim_set_keymap('n', '<F5>', "<cmd>CompilerStop<cr>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<F5>',
+  "<cmd>CompilerStop<cr>" .. "<cmd>OverseerClose<cr>" .. ":lua CloseUnnamedBuffers()<cr>",
+  { noremap = true, silent = true })
 
 -- Redo last selected option
 vim.api.nvim_set_keymap('n', '<F7>', "<cmd>CompilerStop<cr>" .. "<cmd>CompilerRedo<cr>",

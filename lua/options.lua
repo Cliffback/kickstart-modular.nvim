@@ -183,7 +183,7 @@ require("nvim-tree").setup({
     group_empty = true
   },
   filters = {
-    dotfiles = false,
+    dotfiles = true,
   },
   on_attach = my_on_attach,
   -- Don't use gitignore
