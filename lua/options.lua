@@ -61,29 +61,46 @@ vim.opt.termguicolors = true
 local function my_on_attach(bufnr)
   local api = require "nvim-tree.api"
 
+  local FloatPreview = require("float-preview")
+  FloatPreview.attach_nvimtree(bufnr)
+
   local function opts(desc)
     return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
   end
 
+  local close_wrap = FloatPreview.close_wrap
+
+
   -- default mappings
   -- api.config.mappings.default_on_attach(bufnr)
+
+  -- wrap keymaps that use the following apis in close_wrap
+  -- api.node.open.tab
+  -- api.node.open.vertical
+  -- api.node.open.horizontal
+  -- api.node.open.edit
+  -- api.node.open.preview
+  -- api.node.open.no_window_picker
+  -- api.fs.create
+  -- api.fs.remove
+  -- api.fs.rename
 
   -- BEGIN_DEFAULT_ON_ATTACH
   vim.keymap.set('n', '<C-]>', api.tree.change_root_to_node, opts('CD'))
   vim.keymap.set('n', '<C-e>', api.node.open.replace_tree_buffer, opts('Open: In Place'))
   vim.keymap.set('n', '<C-k>', api.node.show_info_popup, opts('Info'))
   vim.keymap.set('n', '<C-r>', api.fs.rename_sub, opts('Rename: Omit Filename'))
-  vim.keymap.set('n', '<C-t>', api.node.open.tab, opts('Open: New Tab'))
-  vim.keymap.set('n', '<C-v>', api.node.open.vertical, opts('Open: Vertical Split'))
-  vim.keymap.set('n', '<C-x>', api.node.open.horizontal, opts('Open: Horizontal Split'))
+  vim.keymap.set('n', '<C-t>', close_wrap(api.node.open.tab), opts('Open: New Tab'))
+  vim.keymap.set('n', '<C-v>', close_wrap(api.node.open.vertical), opts('Open: Vertical Split'))
+  vim.keymap.set('n', '<C-x>', close_wrap(api.node.open.horizontal), opts('Open: Horizontal Split'))
   vim.keymap.set('n', '<BS>', api.node.navigate.parent_close, opts('Close Directory'))
-  vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
+  --vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
   --vim.keymap.set('n', '<Tab>',   api.node.open.preview,               opts('Open Preview'))
   vim.keymap.set('n', '>', api.node.navigate.sibling.next, opts('Next Sibling'))
   vim.keymap.set('n', '<', api.node.navigate.sibling.prev, opts('Previous Sibling'))
   vim.keymap.set('n', '.', api.node.run.cmd, opts('Run Command'))
   vim.keymap.set('n', '-', api.tree.change_root_to_parent, opts('Up'))
-  vim.keymap.set('n', 'a', api.fs.create, opts('Create File Or Directory'))
+  vim.keymap.set('n', 'a', close_wrap(api.fs.create), opts('Create File Or Directory'))
   vim.keymap.set('n', 'bd', api.marks.bulk.delete, opts('Delete Bookmarked'))
   vim.keymap.set('n', 'bt', api.marks.bulk.trash, opts('Trash Bookmarked'))
   vim.keymap.set('n', 'bmv', api.marks.bulk.move, opts('Move Bookmarked'))
@@ -92,7 +109,7 @@ local function my_on_attach(bufnr)
   vim.keymap.set('n', 'C', api.tree.toggle_git_clean_filter, opts('Toggle Filter: Git Clean'))
   vim.keymap.set('n', '[c', api.node.navigate.git.prev, opts('Prev Git'))
   vim.keymap.set('n', ']c', api.node.navigate.git.next, opts('Next Git'))
-  vim.keymap.set('n', 'd', api.fs.remove, opts('Delete'))
+  vim.keymap.set('n', 'd', close_wrap(api.fs.remove), opts('Delete'))
   vim.keymap.set('n', 'D', api.fs.trash, opts('Trash'))
   vim.keymap.set('n', 'E', api.tree.expand_all, opts('Expand All'))
   vim.keymap.set('n', 'e', api.fs.rename_basename, opts('Rename: Basename'))
@@ -113,7 +130,7 @@ local function my_on_attach(bufnr)
   vim.keymap.set('n', 'p', api.fs.paste, opts('Paste'))
   vim.keymap.set('n', 'P', api.node.navigate.parent, opts('Parent Directory'))
   vim.keymap.set('n', 'q', api.tree.close, opts('Close'))
-  vim.keymap.set('n', 'r', api.fs.rename, opts('Rename'))
+  vim.keymap.set('n', 'r', close_wrap(api.fs.rename), opts('Rename'))
   vim.keymap.set('n', 'R', api.tree.reload, opts('Refresh'))
   vim.keymap.set('n', 's', api.node.run.system, opts('Run System'))
   vim.keymap.set('n', 'S', api.tree.search_node, opts('Search'))
@@ -132,10 +149,10 @@ local function my_on_attach(bufnr)
 
     if node.nodes ~= nil then
       -- expand or collapse folder
-      api.node.open.edit()
+      close_wrap(api.node.open.edit())
     else
       -- open file
-      api.node.open.edit()
+      close_wrap(api.node.open.edit())
       -- Close the tree if file was opened
       api.tree.close()
     end
@@ -147,10 +164,10 @@ local function my_on_attach(bufnr)
 
     if node.nodes ~= nil then
       -- expand or collapse folder
-      api.node.open.edit()
+      close_wrap(api.node.open.edit())
     else
       -- open file as vsplit
-      api.node.open.vertical()
+      close_wrap(api.node.open.vertical())
     end
 
     -- Finally refocus on tree if it was lost
@@ -162,14 +179,19 @@ local function my_on_attach(bufnr)
   vim.keymap.set('n', '<C-[>', api.tree.change_root_to_parent, opts('Up'))
   vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
   vim.keymap.set('n', '<C-d>', api.tree.toggle_hidden_filter, opts('Toggle Filter: Dotfiles'))
-  vim.keymap.set('n', 'L', api.node.open.edit, opts('Open'))
-  vim.keymap.set('n', 'l', api.node.open.preview, opts('Open Preview'))
-  vim.keymap.set("n", "<leader>", api.node.open.preview, opts("Vsplit Preview"))
+  vim.keymap.set('n', 'L', close_wrap(api.node.open.edit), opts('Open'))
+  --vim.keymap.set('n', 'l', api.node.open.preview, opts('Open Preview'))
+  --vim.keymap.set("n", "<leader>", api.node.open.preview, opts("Vsplit Preview"))
   -- vim.keymap.set("n", "l",      edit_or_open,                    opts("Edit Or Open"))
   --  vim.keymap.set("n", "L",     vsplit_preview,                  opts("Vsplit Preview"))
   vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close"))
   vim.keymap.set("n", "<C-c>", api.tree.collapse_all, opts("Collapse All"))
-  vim.keymap.set("n", "<C-l>", edit_or_open, opts("Open and Close"))
+  --vim.keymap.set("n", "<C-l>", edit_or_open, opts("Open and Close"))
+  vim.keymap.set("n", "l", edit_or_open, opts("Open and Close"))
+  vim.keymap.set('n', '<CR>', edit_or_open, opts("Open and Close"))
+
+  -- Unmap esc to avoid accidentally going up one directory
+  vim.keymap.del('n', '<Esc>', { buffer = bufnr })
 end
 
 require("nvim-tree").setup({
@@ -248,6 +270,15 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   }
 )
 
+-- Disable inline diagnostics
+vim.diagnostic.config({
+  virtual_text = false
+})
+
+-- Show line diagnostics automatically in hover window
+vim.o.updatetime = 250
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+
 require("dbee").setup()
 
 require("colorizer").setup({
@@ -277,5 +308,56 @@ require("colorizer").setup({
   -- all the sub-options of filetypes apply to buftypes
   buftypes = {},
 })
+
+require('ts_context_commentstring').setup {
+  enable_autocmd = false,
+}
+
+require('Comment').setup({
+  pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+  ---Add a space b/w comment and the line
+  padding = true,
+  ---Whether the cursor should stay at its position
+  sticky = true,
+  ---Lines to be ignored while (un)comment
+  ignore = nil,
+  ---LHS of toggle mappings in NORMAL mode
+  toggler = {
+    ---Line-comment toggle keymap
+    line = 'gcc',
+    ---Block-comment toggle keymap
+    block = 'gbc',
+  },
+  ---LHS of operator-pending mappings in NORMAL and VISUAL mode
+  opleader = {
+    ---Line-comment keymap
+    line = 'gc',
+    ---Block-comment keymap
+    block = 'gb',
+  },
+  ---LHS of extra mappings
+  extra = {
+    ---Add comment on the line above
+    above = 'gcO',
+    ---Add comment on the line below
+    below = 'gco',
+    ---Add comment at the end of line
+    eol = 'gcA',
+  },
+  ---Enable keybindings
+  ---NOTE: If given `false` then the plugin won't create any mappings
+  mappings = {
+    ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
+    basic = true,
+    ---Extra mapping; `gco`, `gcO`, `gcA`
+    extra = true,
+  },
+  ---Function to call before (un)comment
+  pre_hook = nil,
+  ---Function to call after (un)comment
+  post_hook = nil,
+})
+
+
 
 -- vim: ts=2 sts=2 sw=2 et

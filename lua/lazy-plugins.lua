@@ -51,7 +51,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -165,8 +165,16 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
-
+  {
+    'numToStr/Comment.nvim',
+    opts = {
+      -- add any options here
+    },
+    lazy = false,
+  },
+  {
+    'JoosepAlviste/nvim-ts-context-commentstring',
+  },
   -- Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
@@ -196,20 +204,59 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
-  { "catppuccin/nvim",     name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",
     lazy = false,
     dependencies = {
       "nvim-tree/nvim-web-devicons",
+      "JMarkin/nvim-tree.lua-float-preview",
+      lazy = true,
+      -- default
+      opts = {
+        -- Whether the float preview is enabled by default. When set to false, it has to be "toggled" on.
+        toggled_on = true,
+        -- wrap nvimtree commands
+        wrap_nvimtree_commands = true,
+        -- lines for scroll
+        scroll_lines = 20,
+        -- window config
+        window = {
+          style = "minimal",
+          relative = "win",
+          border = "rounded",
+          wrap = false,
+        },
+        mapping = {
+          -- scroll down float buffer
+          down = { "<C-d>" },
+          -- scroll up float buffer
+          up = { "<C-e>", "<C-u>" },
+          -- enable/disable float windows
+          toggle = { "<C-x>" },
+        },
+        -- hooks if return false preview doesn't shown
+        hooks = {
+          pre_open = function(path)
+            -- if file > 5 MB or not text -> not preview
+            local size = require("float-preview.utils").get_size(path)
+            if type(size) ~= "number" then
+              return false
+            end
+            local is_text = require("float-preview.utils").is_text(path)
+            return size < 5 and is_text
+          end,
+          post_open = function(bufnr)
+            return true
+          end,
+        },
+      },
+      config = function()
+        require("nvim-tree").setup {}
+      end,
     },
-    config = function()
-      require("nvim-tree").setup {}
-    end,
   },
-
-
   -- Compiler.nvim
   {
     "Zeioth/compiler.nvim",
@@ -391,6 +438,12 @@ require('lazy').setup({
     ft = { "markdown" },
   },
   { "b0o/schemastore.nvim" },
+  { "mxsdev/nvim-dap-vscode-js", requires = { "mfussenegger/nvim-dap" } },
+  {
+    "microsoft/vscode-js-debug",
+    lazy = true,
+    build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
+  }
 
 
 

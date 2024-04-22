@@ -45,6 +45,7 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 
+local util = require("lspconfig.util")
 
 local servers = {
   -- clangd = {},
@@ -53,6 +54,22 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  bashls = {},
+  cmake = {},
+  omnisharp = {},
+  dockerls = {},
+  docker_compose_language_service = {},
+  eslint = {},
+  gradle_ls = {},
+  html = {},
+  kotlin_language_server = {},
+  marksman = {},
+  pylsp = {},
+  sqlls = {},
+  tsserver = {
+    --root_dir = util.root_pattern("package.json", ".git", "tsconfig.base.json")
+  },
+  tailwindcss = {},
   yamlls = {
 
     yaml = {
