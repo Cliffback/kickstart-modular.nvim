@@ -44,6 +44,12 @@ return {
           return
         end
 
+        -- Exclude .kts files from formatting
+        if vim.fn.expand('%:e') == 'kts' then
+          return
+        end
+
+
         -- Tsserver usually works poorly. Sorry you work with bad languages
         -- You can remove this line if you know what you're doing :)
         if client.name == 'tsserver' then
