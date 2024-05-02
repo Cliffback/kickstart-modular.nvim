@@ -411,7 +411,7 @@ require('lazy').setup({
     lazy = true,
     build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
   },
-  { "https://github.com/github/copilot.vim" }
+  { "https://github.com/github/copilot.vim" },
 
 
 

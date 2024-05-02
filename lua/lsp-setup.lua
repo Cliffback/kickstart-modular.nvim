@@ -2,7 +2,7 @@
 --  This function gets run when an LSP connects to a particular buffer.
 local keymaps = require('keymaps')
 
-local on_attach = function(_, bufnr)
+local on_attach_keymaps = function(_, bufnr)
   keymaps.set_lsp_keymaps(_, bufnr)
 
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -130,11 +130,23 @@ local handlers = {
   }
 }
 
+local on_attach = {
+  default = on_attach_keymaps,
+  tsserver = function(client, bufnr)
+    if client.name == "tsserver" then
+      -- Disable tsserver formatting to use manual eslint on save
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
+    end
+    on_attach_keymaps(client, bufnr)
+  end
+}
+
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
-      on_attach = on_attach,
+      on_attach = on_attach[server_name] or on_attach.default,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
       handlers = handlers[server_name]
