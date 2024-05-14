@@ -412,6 +412,7 @@ require('lazy').setup({
     build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
   },
   { "https://github.com/github/copilot.vim" },
+  { "apple/sourcekit-lsp" }
 
 
 

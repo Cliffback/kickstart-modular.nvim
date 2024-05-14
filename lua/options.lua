@@ -356,4 +356,8 @@ require('Comment').setup({
   post_hook = nil,
 })
 
+require 'lspconfig'.sourcekit.setup {
+  cmd = { '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp' }
+}
+
 -- vim: ts=2 sts=2 sw=2 et
