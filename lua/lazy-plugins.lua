@@ -311,11 +311,9 @@ require('lazy').setup({
       tabpages = true,
       insert_at_end = true,
       auto_hide = 0,
-
-
       sidebar_filetypes = {
         -- Use the default values: {event = 'BufWinLeave', text = nil}
-        NvimTree = true,
+        -- NvimTree = true,
         -- Or, specify the text used for the offset:
         undotree = { text = 'undotree' },
         -- Or, specify the event which the sidebar executes when leaving:
@@ -368,6 +366,9 @@ require('lazy').setup({
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
+      -- auto_close = false, -- automatically close the list when you have no diagnostics
+      -- auto_open = true,
+      auto_close = true,
       -- your configuration comes here
       -- or leave it empty to use the default settings
       -- refer to the configuration section below
@@ -412,7 +413,52 @@ require('lazy').setup({
     build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
   },
   { "https://github.com/github/copilot.vim" },
-  { "apple/sourcekit-lsp" }
+  { "apple/sourcekit-lsp" },
+  { "dmmulroy/tsc.nvim" },
+  { "rcarriga/nvim-notify" },
+  -- {
+  --   "pmizio/typescript-tools.nvim",
+  --   dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+  --   opts = {},
+  -- },
+  {
+    'stevearc/dressing.nvim',
+    opts = {},
+  },
+  {
+    "m4xshen/hardtime.nvim",
+    dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+    opts = {
+      disabled_filetypes = { "qf", "netrw", "NvimTree", "lazy", "mason", "oil", "Dressing*", "notify", "Trouble", "dapui", "TelescopePrompt" },
+      -- disable_mouse = false,
+    },
+  },
+  {
+    "tris203/precognition.nvim",
+    config = {
+      -- startVisible = true,
+      -- showBlankVirtLine = true,
+      -- hints = {
+      --      Caret = { text = "^", prio = 2 },
+      --      Dollar = { text = "$", prio = 1 },
+      --      MatchingPair = { text = "%", prio = 5 },
+      --      Zero = { text = "0", prio = 1 },
+      --      w = { text = "w", prio = 10 },
+      --      b = { text = "b", prio = 9 },
+      --      e = { text = "e", prio = 8 },
+      --      W = { text = "W", prio = 7 },
+      --      B = { text = "B", prio = 6 },
+      --      E = { text = "E", prio = 5 },
+      -- },
+      -- gutterHints = {
+      --     -- prio is not currently used for gutter hints
+      --     G = { text = "G", prio = 1 },
+      --     gg = { text = "gg", prio = 1 },
+      --     PrevParagraph = { text = "{", prio = 1 },
+      --     NextParagraph = { text = "}", prio = 1 },
+      -- },
+    },
+  }
 
 
 

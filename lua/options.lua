@@ -61,6 +61,10 @@ vim.opt.termguicolors = true
 local function my_on_attach(bufnr)
   local api = require "nvim-tree.api"
 
+  api.events.subscribe(api.events.Event.FileCreated, function(file)
+    vim.cmd("edit " .. file.fname)
+  end)
+
   local FloatPreview = require("float-preview")
   FloatPreview.attach_nvimtree(bufnr)
 
@@ -129,7 +133,7 @@ local function my_on_attach(bufnr)
   vim.keymap.set('n', 'O', api.node.open.no_window_picker, opts('Open: No Window Picker'))
   vim.keymap.set('n', 'p', api.fs.paste, opts('Paste'))
   vim.keymap.set('n', 'P', api.node.navigate.parent, opts('Parent Directory'))
-  vim.keymap.set('n', 'q', api.tree.close, opts('Close'))
+  vim.keymap.set('n', 'q', close_wrap(api.tree.close), opts('Close'))
   vim.keymap.set('n', 'r', close_wrap(api.fs.rename), opts('Rename'))
   vim.keymap.set('n', 'R', api.tree.reload, opts('Refresh'))
   vim.keymap.set('n', 's', api.node.run.system, opts('Run System'))
@@ -194,12 +198,50 @@ local function my_on_attach(bufnr)
   vim.keymap.del('n', '<Esc>', { buffer = bufnr })
 end
 
+local HEIGHT_RATIO = 0.8 -- You can change this
+local WIDTH_RATIO = 0.3  -- You can change this too
+
+HEIGHT_PADDING = 10
+WIDTH_PADDING = 15
+
 require("nvim-tree").setup({
   sort = {
     sorter = "case_sensitive",
   },
+  -- respect_buf_cwd = true,
+  -- sync_root_with_cwd = true,
+  -- view = {
+  --   width = 30,
+  -- },
+  update_focused_file = {
+    enable = true,
+  },
   view = {
-    width = 30,
+    float = {
+      -- quit_on_focus_loss = false,
+      enable = true,
+      open_win_config = function()
+        local screen_w = vim.opt.columns:get()
+        local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
+        local window_w_f = (screen_w - WIDTH_PADDING * 2) / 2
+        local window_w = math.floor(window_w_f)
+        local window_h = screen_h - HEIGHT_PADDING * 2
+        local center_x = WIDTH_PADDING - 1
+        local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
+
+        return {
+          border = "single",
+          relative = "editor",
+          row = center_y,
+          col = center_x,
+          width = window_w,
+          height = window_h,
+        }
+      end
+    },
+    width = function()
+      return vim.opt.columns:get() - WIDTH_PADDING * 2
+    end
   },
   renderer = {
     group_empty = true
@@ -214,6 +256,36 @@ require("nvim-tree").setup({
     ignore = false,
     timeout = 500,
   },
+  -- actions = {
+  --   open_file = {
+  --     quit_on_open = true,
+  --   },
+  -- },
+})
+require('float-preview').setup({
+  window = {
+    wrap = false,
+    trim_height = false,
+    open_win_config = function()
+      local screen_w = vim.opt.columns:get()
+      local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
+      local window_w_f = (screen_w - WIDTH_PADDING * 2 - 1) / 2
+      local window_w = math.floor(window_w_f)
+      local window_h = screen_h - HEIGHT_PADDING * 2
+      local center_x = window_w_f + WIDTH_PADDING + 2
+      local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
+
+      return {
+        style = "minimal",
+        relative = "editor",
+        border = "single",
+        row = center_y,
+        col = center_x,
+        width = window_w,
+        height = window_h
+      }
+    end
+  }
 })
 
 local undotree = require('undotree')
@@ -277,7 +349,7 @@ vim.diagnostic.config({
 
 -- Show line diagnostics automatically in hover window
 vim.o.updatetime = 250
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+-- vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 require("colorizer").setup({
   filetypes = { "*" },
@@ -359,5 +431,29 @@ require('Comment').setup({
 require 'lspconfig'.sourcekit.setup {
   cmd = { '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp' }
 }
+
+require('tsc').setup({
+  -- use_diagnostics = true,
+  -- auto_open_qflist = false,
+  use_trouble_qflist = true,
+  auto_close_qflist = true,
+  -- auto_start_watch_mode = true,
+  -- flags = {
+  -- watch = true,
+  -- },
+})
+
+vim.notify = require("notify")
+
+-- require('dressing').setup({
+--   input = {
+--     win_options = {
+--       winhighlight = 'NormalFloat:DiagnosticError'
+--     }
+--   }
+-- })
+
+vim.opt.signcolumn = "yes"
+vim.opt.showmode = false
 
 -- vim: ts=2 sts=2 sw=2 et

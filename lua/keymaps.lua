@@ -30,8 +30,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 --vim.api.nvim_set_keymap("n", "<C-H>", ":NvimTreeToggle<cr>", {silent = true, noremap = true})
 vim.g.mapleader = ' '
 
-vim.api.nvim_set_keymap('n', '<C-h>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>h', '<cmd>lua ToggleNvimTreeFocus()<CR>', { noremap = true, silent = true })
+-- Changed from toggle to open, because issue with float-preview
+-- vim.api.nvim_set_keymap('n', '<C-h>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>n', ':NvimTreeOpen<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>h', '<cmd>lua ToggleNvimTreeFocus()<CR>', { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap('n', '<Tab>', ':wincmd w<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<S-Tab>', ':wincmd W<CR>', { noremap = true, silent = true })
@@ -288,10 +290,12 @@ vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspac
   { noremap = true, silent = true, desc = 'Toggle Workspace Diagnostics' })
 vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end,
   { noremap = true, silent = true, desc = 'Toggle Document Diagnostics' })
---vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end,
---  { noremap = true, silent = true, desc = 'Toggle Quickfix' })
---vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end,
---  { noremap = true, silent = true, desc = 'Toggle Location List' })
+
+vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end,
+  { noremap = true, silent = true, desc = 'Toggle Quickfix' })
+vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end,
+  { noremap = true, silent = true, desc = 'Toggle Location List' })
+
 vim.keymap.set("n", "<leader>xr", function() require("trouble").toggle("lsp_references") end,
   { noremap = true, silent = true, desc = 'Toggle LSP References' })
 --vim.keymap.set("n", "<leader>xf", function() require("trouble").toggle("lsp_definitions") end,
@@ -312,6 +316,14 @@ vim.keymap.set("n", "<M-s>", "<cmd>MarkdownPreviewStop<CR>",
   { noremap = true, silent = true, desc = 'MarkdownPreviewStop' })
 vim.keymap.set("n", "<C-p>", "<cmd>MarkdownPreviewToggle<CR>",
   { noremap = true, silent = true, desc = 'MarkdownPreviewToggle' })
+
+function ToggleHardtimeAndPrecognition()
+  vim.cmd('Hardtime toggle')
+  require("precognition").toggle()
+end
+
+vim.keymap.set("n", "<leader>h", ":lua ToggleHardtimeAndPrecognition()<CR>",
+  { noremap = true, silent = true, desc = 'Toggle Hardtime' })
 
 return M
 
