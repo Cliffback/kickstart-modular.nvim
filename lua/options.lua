@@ -456,4 +456,6 @@ vim.notify = require("notify")
 vim.opt.signcolumn = "yes"
 vim.opt.showmode = false
 
+-- Registers copilot-chat source and enables it for copilot-chat filetype (so copilot chat window)
+require("CopilotChat.integrations.cmp").setup()
 -- vim: ts=2 sts=2 sw=2 et

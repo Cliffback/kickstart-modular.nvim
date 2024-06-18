@@ -459,6 +459,31 @@ require('lazy').setup({
       --     NextParagraph = { text = "}", prio = 1 },
       -- },
     },
+    {
+      "CopilotC-Nvim/CopilotChat.nvim",
+      branch = "canary",
+      dependencies = {
+        { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
+        { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
+      },
+      opts = {
+        debug = true, -- Enable debugging
+        window = {
+          layout = 'float',
+          relative = 'cursor',
+          width = 1,
+          height = 0.4,
+          row = 1
+        },
+        -- You might also want to disable default <tab> complete mapping for copilot chat when doing this
+        mappings = {
+          complete = {
+            insert = '',
+          },
+        },
+      },
+      -- See Commands section for default commands if you want to lazy load on them
+    },
   }
 
 
