@@ -317,13 +317,29 @@ vim.keymap.set("n", "<M-s>", "<cmd>MarkdownPreviewStop<CR>",
 vim.keymap.set("n", "<C-p>", "<cmd>MarkdownPreviewToggle<CR>",
   { noremap = true, silent = true, desc = 'MarkdownPreviewToggle' })
 
+-- Global variable to track the state
+_G.is_hardtime_enabled = false
+_G.is_precognition_enabled = false
+
 function ToggleHardtimeAndPrecognition()
   vim.cmd('Hardtime toggle')
-  require("precognition").toggle()
+  _G.is_hardtime_enabled = not _G.is_hardtime_enabled
+
+  if _G.is_hardtime_enabled ~= _G.is_precognition_enabled then
+    require("precognition").toggle()
+    _G.is_precognition_enabled = not _G.is_precognition_enabled
+  end
 end
 
+function TogglePrecognition()
+  require("precognition").toggle()
+  _G.is_precognition_enabled = not _G.is_precognition_enabled
+end
+
+vim.keymap.set("n", "<leader>p", ":lua TogglePrecognition()<CR>",
+  { noremap = true, silent = true, desc = 'Toggle precognition' })
 vim.keymap.set("n", "<leader>h", ":lua ToggleHardtimeAndPrecognition()<CR>",
-  { noremap = true, silent = true, desc = 'Toggle Hardtime' })
+  { noremap = true, silent = true, desc = 'Toggle Hardtime and precognition' })
 
 return M
 
