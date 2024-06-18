@@ -341,39 +341,40 @@ vim.keymap.set("n", "<leader>p", ":lua TogglePrecognition()<CR>",
 vim.keymap.set("n", "<leader>h", ":lua ToggleHardtimeAndPrecognition()<CR>",
   { noremap = true, silent = true, desc = 'Toggle Hardtime and precognition' })
 
-vim.keymap.set('n', '<leader>ci', ':lua local input = vim.fn.input("Enter input: ") vim.cmd("CopilotChat " .. input)<CR>',
+vim.keymap.set('n', '<leader>cci',
+  ':lua local input = vim.fn.input("Enter input: ") vim.cmd("CopilotChat " .. input)<CR>',
   { desc = 'Open chat window with optional input' })
-vim.keymap.set('n', '<leader>co', '<cmd>CopilotChatOpen<CR>', { desc = 'Open chat window' })
-vim.keymap.set('n', '<leader>cc', '<cmd>CopilotChatClose<CR>', { desc = 'Close chat window' })
-vim.keymap.set('n', '<leader>ct', '<cmd>CopilotChatToggle<CR>', { desc = 'Toggle chat window' })
-vim.keymap.set('n', '<leader>cx', '<cmd>CopilotChatStop<CR>', { desc = 'Stop current copilot output' })
-vim.keymap.set('n', '<leader>cr', '<cmd>CopilotChatReset<CR>', { desc = 'Reset chat window' })
-vim.keymap.set('n', '<leader>cs',
+vim.keymap.set('n', '<leader>cco', '<cmd>CopilotChatOpen<CR>', { desc = 'Open chat window' })
+vim.keymap.set('n', '<leader>ccc', '<cmd>CopilotChatClose<CR>', { desc = 'Close chat window' })
+vim.keymap.set('n', '<leader>cct', '<cmd>CopilotChatToggle<CR>', { desc = 'Toggle chat window' })
+vim.keymap.set('n', '<leader>ccx', '<cmd>CopilotChatStop<CR>', { desc = 'Stop current copilot output' })
+vim.keymap.set('n', '<leader>ccr', '<cmd>CopilotChatReset<CR>', { desc = 'Reset chat window' })
+vim.keymap.set('n', '<leader>ccs',
   ':lua local name = vim.fn.input("Enter filename: ") vim.cmd("CopilotChatSave " .. name)<CR>',
   { desc = 'Save chat history to file' })
-vim.keymap.set('n', '<leader>cl',
+vim.keymap.set('n', '<leader>ccl',
   ':lua local name = vim.fn.input("Enter filename: ") vim.cmd("CopilotChatLoad " .. name)<CR>',
   { desc = 'Load chat history from file' })
-vim.keymap.set('n', '<leader>cd', '<cmd>CopilotChatDebugInfo<CR>', { desc = 'Show debug information' })
+vim.keymap.set('n', '<leader>ccd', '<cmd>CopilotChatDebugInfo<CR>', { desc = 'Show debug information' })
 
-vim.api.nvim_set_keymap('n', '<leader>ch',
+vim.api.nvim_set_keymap('n', '<leader>cch',
   ':lua local actions = require("CopilotChat.actions") require("CopilotChat.integrations.telescope").pick(actions.help_actions())<CR>',
   { desc = 'Show help actions' })
-vim.api.nvim_set_keymap('n', '<leader>cp',
+vim.api.nvim_set_keymap('n', '<leader>ccp',
   ':lua local actions = require("CopilotChat.actions") require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())<CR>',
   { desc = 'Show prompt actions' })
 
-vim.keymap.set('n', '<leader>cae', '<cmd>CopilotChatExplain<CR>',
-  { desc = 'Write an explanation for the active selection as paragraphs of text' })
-vim.keymap.set('n', '<leader>car', '<cmd>CopilotChatReview<CR>', { desc = 'Review the selected code' })
-vim.keymap.set('n', '<leader>caf', '<cmd>CopilotChatFix<CR>',
-  { desc = 'There is a problem in this code. Rewrite the code to show it with the bug fixed' })
-vim.keymap.set('n', '<leader>cao', '<cmd>CopilotChatOptimize<CR>',
-  { desc = 'Optimize the selected code to improve performance and readablilty' })
-vim.keymap.set('n', '<leader>cad', '<cmd>CopilotChatDocs<CR>', { desc = 'Add documentation comment for the selection' })
-vim.keymap.set('n', '<leader>cat', '<cmd>CopilotChatTests<CR>', { desc = 'Generate tests for my code' })
-vim.keymap.set('n', '<leader>cax', '<cmd>CopilotChatFixDiagnostics<CR>',
-  { desc = 'Assist with the following diagnostic issue in file' })
+-- vim.keymap.set('n', '<leader>cae', '<cmd>CopilotChatExplain<CR>',
+--   { desc = 'Write an explanation for the active selection as paragraphs of text' })
+-- vim.keymap.set('n', '<leader>car', '<cmd>CopilotChatReview<CR>', { desc = 'Review the selected code' })
+-- vim.keymap.set('n', '<leader>caf', '<cmd>CopilotChatFix<CR>',
+--   { desc = 'There is a problem in this code. Rewrite the code to show it with the bug fixed' })
+-- vim.keymap.set('n', '<leader>cao', '<cmd>CopilotChatOptimize<CR>',
+--   { desc = 'Optimize the selected code to improve performance and readablilty' })
+-- vim.keymap.set('n', '<leader>cad', '<cmd>CopilotChatDocs<CR>', { desc = 'Add documentation comment for the selection' })
+-- vim.keymap.set('n', '<leader>cat', '<cmd>CopilotChatTests<CR>', { desc = 'Generate tests for my code' })
+-- vim.keymap.set('n', '<leader>cax', '<cmd>CopilotChatFixDiagnostics<CR>',
+--   { desc = 'Assist with the following diagnostic issue in file' })
 -- vim.keymap.set('n', '<leader>chc', '<cmd>CopilotChatDebugInfo<CR>', { desc = 'Write commit message for the change with commitizen convention' })
 -- vim.keymap.set('n', '<leader>chs', '<cmd>CopilotChatCommitStaged<CR>', { desc = 'Write commit message for the change with commitizen convention' })
 
