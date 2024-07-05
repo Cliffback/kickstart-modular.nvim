@@ -264,10 +264,9 @@ require('lazy').setup({
     dependencies = { "stevearc/overseer.nvim" },
     opts = {},
   },
-  --- Tasl Runner
+  --- Task Runner
   {
     "stevearc/overseer.nvim",
-    commit = "400e762648b70397d0d315e5acaf0ff3597f2d8b",
     cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
     opts = {
       task_list = {
@@ -278,23 +277,23 @@ require('lazy').setup({
       },
     },
   },
-  -- plugins/rest.lua
-  {
-    "vhyrro/luarocks.nvim",
-    priority = 1000,
-    config = true,
-    opts = {
-      rocks = { "lua-curl", "nvim-nio", "mimetypes", "xml2lua" }
-    }
-  },
-  {
-    "rest-nvim/rest.nvim",
-    ft = "http",
-    dependencies = { "luarocks.nvim" },
-    config = function()
-      require("rest-nvim").setup()
-    end,
-  },
+  -- -- plugins/rest.lua
+  -- {
+  --   "vhyrro/luarocks.nvim",
+  --   priority = 1000,
+  --   config = true,
+  --   opts = {
+  --     rocks = { "lua-curl", "nvim-nio", "mimetypes", "xml2lua" }
+  --   }
+  -- },
+  -- {
+  --   "rest-nvim/rest.nvim",
+  --   ft = "http",
+  --   dependencies = { "luarocks.nvim" },
+  --   config = function()
+  --     require("rest-nvim").setup()
+  --   end,
+  -- },
   {
     'romgrk/barbar.nvim',
     dependencies = {
