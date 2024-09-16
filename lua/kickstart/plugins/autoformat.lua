@@ -57,7 +57,7 @@ return {
         -- if client.name == 'tsserver' then
         --   return
         -- end
-        if client.name == 'eslint' or client.name == 'typescript-tools' then
+        if client.name == 'eslint' or client.name == 'typescript-tools' or 'html' then
           return
         end
         if client.name == 'tsserver' then
