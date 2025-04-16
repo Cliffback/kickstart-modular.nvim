@@ -60,7 +60,7 @@ return {
         if client.name == 'eslint' or client.name == 'typescript-tools' or 'html' then
           return
         end
-        if client.name == 'tsserver' then
+        if client.name == 'ts_ls' then
           vim.api.nvim_create_autocmd('BufWritePre', {
             pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
             command = 'silent! EslintFixAll',

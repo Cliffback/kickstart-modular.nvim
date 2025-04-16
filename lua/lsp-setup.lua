@@ -65,9 +65,10 @@ local servers = {
   kotlin_language_server = {},
   marksman = {},
   pylsp = {},
+  shopify_theme_ls = {},
   sqlls = {},
-  tsserver = {
-    --root_dir = util.root_pattern("package.json", ".git", "tsconfig.base.json")
+  ts_ls = {
+  --   -- root_dir = util.root_pattern("package.json", ".git", "tsconfig.base.json")
   },
   tailwindcss = {},
   yamlls = {
@@ -132,9 +133,9 @@ local handlers = {
 
 local on_attach = {
   default = on_attach_keymaps,
-  tsserver = function(client, bufnr)
-    if client.name == "tsserver" then
-      -- Disable tsserver formatting to use manual eslint on save
+  ts_ls = function(client, bufnr)
+    if client.name == "ts_ls" then
+      -- Disable ts_ls formatting to use manual eslint on save
       client.server_capabilities.documentFormattingProvider = false
       client.server_capabilities.documentRangeFormattingProvider = false
     end
