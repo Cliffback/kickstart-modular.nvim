@@ -24,34 +24,50 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
+    
+    -- ['<Tab>'] = cmp.mapping(function(fallback)
+    --   cmp.mapping.abort()
+    --   if vim.fn["copilot#Visible"] then
+    --     local copilot_keys = vim.fn["copilot#Accept"]()
+    --     if copilot_keys ~= "" then
+    --       vim.api.nvim_feedkeys(copilot_keys, "i", true)
+    --     end
+    --   else
+    --     fallback()
+    --   end
+    -- end, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+        -- ['<C-n>'] = cmp.mapping(function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_next_item()
+    --   elseif luasnip.expand_or_locally_jumpable() then
+    --     luasnip.expand_or_jump()
+    --   else
+    --     fallback()
+    --   end
+    -- end, { 'i', 's' }),
+    -- ['<C-p>'] = cmp.mapping(function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_prev_item()
+    --   elseif luasnip.locally_jumpable(-1) then
+    --     luasnip.jump(-1)
+    --   else
+    --     fallback()
+    --   end
+    -- end, { 'i', 's' }),
     -- Use Copilot to complete the current word
-    ["<C-Tab>"] = cmp.mapping(function(fallback)
-      cmp.mapping.abort()
-      local copilot_keys = vim.fn["copilot#Accept"]()
-      if copilot_keys ~= "" then
-        vim.api.nvim_feedkeys(copilot_keys, "i", true)
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
+    -- ["<Right>"] = cmp.mapping(function(fallback)
+    --   cmp.mapping.abort()
+    --   local copilot_keys = vim.fn["copilot#Accept"]()
+    --   if copilot_keys ~= "" then
+    --     vim.api.nvim_feedkeys(copilot_keys, "i", true)
+    --   else
+    --     fallback()
+    --   end
+    -- end, { "i", "s" }),
   },
   sources = {
     { name = 'nvim_lsp' },
