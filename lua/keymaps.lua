@@ -336,9 +336,11 @@ function TogglePrecognition()
   _G.is_precognition_enabled = not _G.is_precognition_enabled
 end
 
-vim.keymap.set("n", "<leader>p", ":lua TogglePrecognition()<CR>",
+vim.keymap.set("n", "<leader>pp", ":lua TogglePrecognition()<CR>",
   { noremap = true, silent = true, desc = 'Toggle precognition' })
-vim.keymap.set("n", "<leader>h", ":lua ToggleHardtimeAndPrecognition()<CR>",
+vim.keymap.set("n", "<leader>ph", ":lua vim.cmd('Hardtime toggle')<CR>",
+  { noremap = true, silent = true, desc = 'Toggle Hardtime' })
+vim.keymap.set("n", "<leader>pb", ":lua ToggleHardtimeAndPrecognition()<CR>",
   { noremap = true, silent = true, desc = 'Toggle Hardtime and precognition' })
 
 vim.keymap.set('n', '<leader>cci',
