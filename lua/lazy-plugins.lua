@@ -460,19 +460,18 @@ require('lazy').setup({
     },
     {
       "CopilotC-Nvim/CopilotChat.nvim",
-      branch = "canary",
       dependencies = {
         { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-        { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
+        { "nvim-lua/plenary.nvim", branch = "master" },  -- for curl, log wrapper
       },
+      build = "make tiktoken", -- Only on MacOS or Linux
       opts = {
-        debug = true, -- Enable debugging
+        -- debug = true, -- Enable debugging
         window = {
           layout = 'float',
-          relative = 'cursor',
-          width = 1,
-          height = 0.4,
-          row = 1
+          relative = 'editor',
+          width = 0.5,
+          height = 0.5,
         },
         -- You might also want to disable default <tab> complete mapping for copilot chat when doing this
         mappings = {
