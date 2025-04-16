@@ -98,7 +98,8 @@ local function my_on_attach(bufnr)
   vim.keymap.set('n', '<C-v>', close_wrap(api.node.open.vertical), opts('Open: Vertical Split'))
   vim.keymap.set('n', '<C-x>', close_wrap(api.node.open.horizontal), opts('Open: Horizontal Split'))
   vim.keymap.set('n', '<BS>', api.node.navigate.parent_close, opts('Close Directory'))
-  --vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
+  vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
+  vim.keymap.set("n", "l", api.node.open.edit, opts("Open"))
   --vim.keymap.set('n', '<Tab>',   api.node.open.preview,               opts('Open Preview'))
   vim.keymap.set('n', '>', api.node.navigate.sibling.next, opts('Next Sibling'))
   vim.keymap.set('n', '<', api.node.navigate.sibling.prev, opts('Previous Sibling'))
@@ -148,20 +149,6 @@ local function my_on_attach(bufnr)
   vim.keymap.set('n', '<2-RightMouse>', api.tree.change_root_to_node, opts('CD'))
   -- END_DEFAULT_ON_ATTACH
 
-  local function edit_or_open()
-    local node = api.tree.get_node_under_cursor()
-
-    if node.nodes ~= nil then
-      -- expand or collapse folder
-      close_wrap(api.node.open.edit())
-    else
-      -- open file
-      close_wrap(api.node.open.edit())
-      -- Close the tree if file was opened
-      api.tree.close()
-    end
-  end
-
   -- open as vsplit on current node
   local function vsplit_preview()
     local node = api.tree.get_node_under_cursor()
@@ -191,8 +178,8 @@ local function my_on_attach(bufnr)
   vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close"))
   vim.keymap.set("n", "<C-c>", api.tree.collapse_all, opts("Collapse All"))
   --vim.keymap.set("n", "<C-l>", edit_or_open, opts("Open and Close"))
-  vim.keymap.set("n", "l", edit_or_open, opts("Open and Close"))
-  vim.keymap.set('n', '<CR>', edit_or_open, opts("Open and Close"))
+  -- vim.keymap.set("n", "l", edit_or_open, opts("Open and Close"))
+  -- vim.keymap.set('n', '<CR>', edit_or_open, opts("Open and Close"))
 
   -- Unmap esc to avoid accidentally going up one directory
   vim.keymap.del('n', '<Esc>', { buffer = bufnr })
