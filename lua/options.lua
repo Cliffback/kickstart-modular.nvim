@@ -25,7 +25,7 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+-- vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -448,6 +448,48 @@ require('copilot').setup({
     max_width = 80,  -- Set the maximum width of the popup window
   },
 })
+
+-- Define a function to send 'exit' to the terminal
+function _G.send_exit_to_toggleterm()
+  local term = require('toggleterm.terminal').get(1)  -- Get the first terminal instance
+  if term then
+    term:send('exit\n')
+  end
+end
+
+-- Create a custom command to call this function
+vim.api.nvim_create_user_command('ToggleTermSendExit', 'lua send_exit_to_toggleterm()', {})
+vim.api.nvim_create_autocmd({ "TermEnter" }, {
+    callback = function()
+        for _, buffers in ipairs(vim.fn.getbufinfo()) do
+            local filetype = vim.api.nvim_buf_get_option(buffers.bufnr, "filetype")
+            if filetype == "toggleterm" then
+                vim.api.nvim_create_autocmd({ "BufWriteCmd", "FileWriteCmd", "FileAppendCmd" }, {
+                    buffer = buffers.bufnr,
+                    command = "q!",
+                })
+            end
+        end
+    end,
+})
+
+-- WSL yank support in init.lua
+
+local clip = "/mnt/c/Windows/System32/clip.exe" -- Adjust path if needed
+
+if vim.fn.executable(clip) == 1 then
+  vim.api.nvim_create_augroup("WSLYank", { clear = true })
+
+  vim.api.nvim_create_autocmd("TextYankPost", {
+    group = "WSLYank",
+    callback = function()
+      if vim.v.event.operator == "y" then
+        local text = table.concat(vim.fn.getreg('"', 1, true), "\n")
+        vim.fn.system(clip, text)
+      end
+    end,
+  })
+end
 
 -- Registers copilot-chat source and enables it for copilot-chat filetype (so copilot chat window)
 -- require("CopilotChat.integrations.cmp").setup()

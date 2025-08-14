@@ -503,6 +503,7 @@ require('lazy').setup({
       },
       build = "make tiktoken", -- Only on MacOS or Linux
       opts = {
+        model = 'gpt-4.1',
         -- debug = true, -- Enable debugging
         window = {
           layout = 'float',
@@ -523,8 +524,6 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons"
     }
   }
-
-
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
