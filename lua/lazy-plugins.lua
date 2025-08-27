@@ -364,6 +364,7 @@ require('lazy').setup({
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "Trouble",
     opts = {
       -- auto_close = false, -- automatically close the list when you have no diagnostics
       -- auto_open = true,
