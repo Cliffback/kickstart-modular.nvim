@@ -35,51 +35,91 @@ return {
       group = vim.api.nvim_create_augroup('kickstart-lsp-attach-format', { clear = true }),
       -- This is where we attach the autoformatting for reasonable clients
       callback = function(args)
-      	local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
         local bufnr = args.buf
 
-        -- Only attach to clients that support document formatting
-        -- if not client.server_capabilities.documentFormattingProvider then
-        --   return
-        -- end
+        if not client then
+          return
+        end
 
-      if client.name == "biome" then 
+        if client.name == "biome" then
+          -- This approach is cleaner, but returns "no code action" when there are no fixes to apply
+          --   vim.api.nvim_create_autocmd("BufWritePre", {
+          --     group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = true }),
+          --     callback = function()
+          --       vim.lsp.buf.code_action({
+          --         context = {
+          --           only = { "source.fixAll.biome" },
+          --           diagnostics = {},
+          --         },
+          --         apply = true,
+          --       })
+          --     end,
+          --   })
+
           vim.api.nvim_create_autocmd("BufWritePre", {
             group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = true }),
             callback = function()
-              vim.lsp.buf.code_action({
-                context = {
-                  only = { "source.fixAll.biome" },
-                  diagnostics = {},
-                },
-                apply = true,
-              })
+              if not client then return end
+
+              local params = vim.lsp.util.make_range_params(nil, client.offset_encoding)
+              params.context = {
+                only = { "source.fixAll.biome" },
+                diagnostics = {},
+              }
+
+              client.request("textDocument/codeAction", params, function(_, result)
+                if result and not vim.tbl_isempty(result) then
+                  vim.notify("Applying 'fixAll' actions from Biome")
+                  for _, action in pairs(result) do
+                    if action.command then
+                      client:exec_cmd(action, { bufnr = bufnr })
+                    elseif action.edit then
+                      vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
+                    end
+                  end
+                else
+                  -- No fixAll actions available, fallback to formatting
+                  vim.notify("No 'fixAll' actions from Biome, falling back to formatting")
+                  vim.lsp.buf.format({
+                    bufnr = bufnr,
+                    async = false,
+                    filter = function(c)
+                      return c.name == "biome" or c.id == client.id
+                    end,
+                  })
+                end
+              end, bufnr)
             end,
           })
+          return
+        end
+
+        if client.name == 'eslint' then
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
+            command = 'silent! EslintFixAll',
+            group = get_augroup(client),
+          })
+          -- vim.api.nvim_create_autocmd('BufWritePre', {
+          --   pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
+          --   command = 'TSC',
+          --   group = get_augroup(client),
+          -- })
+          return
+        end
+
+        -- Tsserver usually works poorly. Sorry you work with bad languages
+        local serverOverrides = { 'ts_ls', 'typescript-tools', 'html', 'tsserver' }
+        -- Only attach to clients that support document formatting
+        if not client.server_capabilities.documentFormattingProvider or vim.tbl_contains(serverOverrides, client.name) then
+          return
         end
 
         -- Exclude .kts files from formatting
         if vim.fn.expand('%:e') == 'kts' then
           return
         end
-
-        -- Tsserver usually works poorly. Sorry you work with bad languages
-        if client.name == 'ts_ls' or client.name == 'typescript-tools' or client.name == 'html' or client.name == "tsserver" then
-          return
-        end
-        -- if client.name == 'ts_ls' then
-        --   vim.api.nvim_create_autocmd('BufWritePre', {
-        --     pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
-        --     command = 'silent! EslintFixAll',
-        --     group = get_augroup(client),
-        --   })
-        --   -- vim.api.nvim_create_autocmd('BufWritePre', {
-        --   --   pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
-        --   --   command = 'TSC',
-        --   --   group = get_augroup(client),
-        --   -- })
-        --   return
-        -- end
 
         -- Create an autocmd that will run *before* we save the buffer.
         --  Run the formatting command for the LSP that has just attached.

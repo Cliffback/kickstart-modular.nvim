@@ -139,28 +139,31 @@ local handlers = {
 local on_attach = {
   default = on_attach_keymaps,
   ts_ls = function(client, bufnr)
-    if client.name == "ts_ls" then
-      -- Disable ts_ls formatting to use manual eslint on save
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentRangeFormattingProvider = false
-    end
+    -- Disable ts_ls formatting to use manual eslint on save
+
+    vim.notify("Enabling ts_ls format on save" .. client)
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
     on_attach_keymaps(client, bufnr)
   end,
   tsserver = function(client, bufnr)
-    if client.name == "tsserver" then
-      -- Disable tsserver formatting to use manual eslint on save
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentRangeFormattingProvider = false
-    end
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
+    on_attach_keymaps(client, bufnr)
+  end,
+  biome = function(client, bufnr)
+    client.server_capabilities.documentFormattingProvider = true
+    client.server_capabilities.documentRangeFormattingProvider = true
     on_attach_keymaps(client, bufnr)
   end
+
 }
 
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
-      on_attach = on_attach[server_name] or on_attach.default,
+      on_attach = on_attach_keymaps,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
       handlers = handlers[server_name]
