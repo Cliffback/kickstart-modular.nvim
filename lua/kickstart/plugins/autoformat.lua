@@ -35,13 +35,27 @@ return {
       group = vim.api.nvim_create_augroup('kickstart-lsp-attach-format', { clear = true }),
       -- This is where we attach the autoformatting for reasonable clients
       callback = function(args)
-        local client_id = args.data.client_id
-        local client = vim.lsp.get_client_by_id(client_id)
+      	local client = vim.lsp.get_client_by_id(args.data.client_id)
         local bufnr = args.buf
 
         -- Only attach to clients that support document formatting
-        if not client.server_capabilities.documentFormattingProvider then
-          return
+        -- if not client.server_capabilities.documentFormattingProvider then
+        --   return
+        -- end
+
+      if client.name == "biome" then 
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = true }),
+            callback = function()
+              vim.lsp.buf.code_action({
+                context = {
+                  only = { "source.fixAll.biome" },
+                  diagnostics = {},
+                },
+                apply = true,
+              })
+            end,
+          })
         end
 
         -- Exclude .kts files from formatting
@@ -50,29 +64,22 @@ return {
         end
 
         -- Tsserver usually works poorly. Sorry you work with bad languages
-        -- You can remove this line if you know what you're doing :)
-        -- if client.name == 'tsserver' then
-        --   return
-        -- end
-        -- if client.name == 'tsserver' then
-        --   return
-        -- end
-        if client.name == 'eslint' or client.name == 'typescript-tools' or 'html' then
+        if client.name == 'ts_ls' or client.name == 'typescript-tools' or client.name == 'html' or client.name == "tsserver" then
           return
         end
-        if client.name == 'ts_ls' then
-          vim.api.nvim_create_autocmd('BufWritePre', {
-            pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
-            command = 'silent! EslintFixAll',
-            group = get_augroup(client),
-          })
-          -- vim.api.nvim_create_autocmd('BufWritePre', {
-          --   pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
-          --   command = 'TSC',
-          --   group = get_augroup(client),
-          -- })
-          return
-        end
+        -- if client.name == 'ts_ls' then
+        --   vim.api.nvim_create_autocmd('BufWritePre', {
+        --     pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
+        --     command = 'silent! EslintFixAll',
+        --     group = get_augroup(client),
+        --   })
+        --   -- vim.api.nvim_create_autocmd('BufWritePre', {
+        --   --   pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
+        --   --   command = 'TSC',
+        --   --   group = get_augroup(client),
+        --   -- })
+        --   return
+        -- end
 
         -- Create an autocmd that will run *before* we save the buffer.
         --  Run the formatting command for the LSP that has just attached.
