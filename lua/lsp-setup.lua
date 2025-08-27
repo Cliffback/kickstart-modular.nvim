@@ -59,6 +59,7 @@ local servers = {
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   bashls = {},
+  biome = {},
   cmake = {},
   omnisharp = {},
   dockerls = {},
@@ -140,6 +141,14 @@ local on_attach = {
   ts_ls = function(client, bufnr)
     if client.name == "ts_ls" then
       -- Disable ts_ls formatting to use manual eslint on save
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
+    end
+    on_attach_keymaps(client, bufnr)
+  end,
+  tsserver = function(client, bufnr)
+    if client.name == "tsserver" then
+      -- Disable tsserver formatting to use manual eslint on save
       client.server_capabilities.documentFormattingProvider = false
       client.server_capabilities.documentRangeFormattingProvider = false
     end
