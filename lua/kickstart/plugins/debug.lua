@@ -42,10 +42,6 @@ return {
       },
     }
 
-
-    -- Overwrites the default config for netcoredbg with mason, as no Apple Silicone builds are provided. This requires compilation and installation from the official repo
-    require('netcoredbg-macOS-arm64').setup(require('dap'))
-
     require("dap-vscode-js").setup({
       -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
       debugger_path = vim.fn.stdpath('data') .. "/lazy/vscode-js-debug",                                                       -- Path to vscode-js-debug installation.
