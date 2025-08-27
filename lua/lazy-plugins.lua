@@ -427,7 +427,14 @@ require('lazy').setup({
   },
   {
     "Cliffback/netcoredbg-macOS-arm64.nvim",
-    dependencies = { "mfussenegger/nvim-dap" }
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "rcarriga/nvim-dap-ui",
+      "ellisonleao/dotenv.nvim"
+    },
+    config = function()
+      require("netcoredbg-macOS-arm64").setup()
+    end,
   },
   {
     "NvChad/nvim-colorizer.lua"
