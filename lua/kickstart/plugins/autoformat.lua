@@ -59,8 +59,9 @@ return {
 
           vim.api.nvim_create_autocmd("BufWritePre", {
             group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = true }),
-            callback = function()
+            callback = function(args)
               if not client then return end
+              local bufnr = args.buf
 
               local params = vim.lsp.util.make_range_params(nil, client.offset_encoding)
               params.context = {
@@ -70,7 +71,6 @@ return {
 
               client.request("textDocument/codeAction", params, function(_, result)
                 if result and not vim.tbl_isempty(result) then
-                  vim.notify("Applying 'fixAll' actions from Biome")
                   for _, action in pairs(result) do
                     if action.command then
                       client:exec_cmd(action, { bufnr = bufnr })
@@ -79,8 +79,6 @@ return {
                     end
                   end
                 else
-                  -- No fixAll actions available, fallback to formatting
-                  vim.notify("No 'fixAll' actions from Biome, falling back to formatting")
                   vim.lsp.buf.format({
                     bufnr = bufnr,
                     async = false,
@@ -89,6 +87,12 @@ return {
                     end,
                   })
                 end
+                -- Delay and check if buffer was modified
+                vim.defer_fn(function()
+                  if vim.bo[bufnr].modified then
+                    vim.cmd("silent! write")
+                  end
+                end, 100)
               end, bufnr)
             end,
           })

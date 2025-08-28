@@ -29,14 +29,14 @@ wk.add({
 
 -- Visual mode mappings
 wk.add({
-  { "<leader>", group = "VISUAL <leader>" },
+  { "<leader>",  group = "VISUAL <leader>" },
   { "<leader>h", group = "Git [H]unk" },
 }, { mode = "v" })
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
 require('mason').setup()
-require('mason-lspconfig').setup{
+require('mason-lspconfig').setup {
   automatic_installation = true
 }
 
@@ -73,7 +73,7 @@ local servers = {
   shopify_theme_ls = {},
   sqlls = {},
   ts_ls = {
-  --   -- root_dir = util.root_pattern("package.json", ".git", "tsconfig.base.json")
+    --   -- root_dir = util.root_pattern("package.json", ".git", "tsconfig.base.json")
   },
   tailwindcss = {},
   yamlls = {
@@ -134,29 +134,6 @@ local handlers = {
   omnisharp = {
     ["textDocument/definition"] = require('omnisharp_extended').handler,
   }
-}
-
-local on_attach = {
-  default = on_attach_keymaps,
-  ts_ls = function(client, bufnr)
-    -- Disable ts_ls formatting to use manual eslint on save
-
-    vim.notify("Enabling ts_ls format on save" .. client)
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentRangeFormattingProvider = false
-    on_attach_keymaps(client, bufnr)
-  end,
-  tsserver = function(client, bufnr)
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentRangeFormattingProvider = false
-    on_attach_keymaps(client, bufnr)
-  end,
-  biome = function(client, bufnr)
-    client.server_capabilities.documentFormattingProvider = true
-    client.server_capabilities.documentRangeFormattingProvider = true
-    on_attach_keymaps(client, bufnr)
-  end
-
 }
 
 mason_lspconfig.setup_handlers {
