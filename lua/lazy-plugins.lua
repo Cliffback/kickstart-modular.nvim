@@ -509,10 +509,10 @@ require('lazy').setup({
     {
       "CopilotC-Nvim/CopilotChat.nvim",
       dependencies = {
-        { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-        { "nvim-lua/plenary.nvim", branch = "master" },  -- for curl, log wrapper
+        { "zbirenbaum/copilot.lua" },                   -- or github/copilot.vim
+        { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log wrapper
       },
-      build = "make tiktoken", -- Only on MacOS or Linux
+      build = "make tiktoken",                          -- Only on MacOS or Linux
       opts = {
         model = 'gpt-4.1',
         -- debug = true, -- Enable debugging

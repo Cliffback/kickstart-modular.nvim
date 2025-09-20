@@ -29,14 +29,14 @@ wk.add({
 
 -- Visual mode mappings
 wk.add({
-  { "<leader>", group = "VISUAL <leader>" },
+  { "<leader>",  group = "VISUAL <leader>" },
   { "<leader>h", group = "Git [H]unk" },
 }, { mode = "v" })
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
 require('mason').setup()
-require('mason-lspconfig').setup{
+require('mason-lspconfig').setup {
   automatic_installation = true
 }
 
@@ -73,7 +73,7 @@ local servers = {
   shopify_theme_ls = {},
   sqlls = {},
   ts_ls = {
-  --   -- root_dir = util.root_pattern("package.json", ".git", "tsconfig.base.json")
+    --   -- root_dir = util.root_pattern("package.json", ".git", "tsconfig.base.json")
   },
   tailwindcss = {},
   yamlls = {
