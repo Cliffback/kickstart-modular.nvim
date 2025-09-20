@@ -428,10 +428,13 @@ require('lazy').setup({
   },
   {
     "Cliffback/netcoredbg-macOS-arm64.nvim",
+    cond = function()
+      return vim.loop.os_uname().sysname == "Darwin" -- only load on macOS
+    end,
     dependencies = {
       "mfussenegger/nvim-dap",
       "rcarriga/nvim-dap-ui",
-      "ellisonleao/dotenv.nvim"
+      "ellisonleao/dotenv.nvim",
     },
     config = function()
       require("netcoredbg-macOS-arm64").setup()
