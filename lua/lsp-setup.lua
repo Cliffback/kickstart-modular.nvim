@@ -156,16 +156,23 @@ local on_attach = {
   end
 }
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach[server_name] or on_attach.default,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-      handlers = handlers[server_name]
-    }
-  end,
+local lspconfig = require("lspconfig")
+
+mason_lspconfig.setup {
+  ensure_installed = vim.tbl_keys(servers),
+  automatic_installation = true,
 }
 
--- vim: ts=2 sts=2 sw=2 et
+for server_name, server_config in pairs(servers) do
+  local on_attach_fn = on_attach[server_name] or on_attach.default
+
+  lspconfig[server_name].setup({
+    capabilities = capabilities,
+    on_attach = on_attach_fn,
+    settings = server_config,
+    filetypes = server_config.filetypes,
+    handlers = handlers[server_name],
+  })
+end
+
+-- -- vim: ts=2 sts=2 sw=2 et
