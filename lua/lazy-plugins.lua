@@ -397,7 +397,7 @@ require('lazy').setup({
       "ellisonleao/dotenv.nvim"
     },
     config = function()
-      require("netcoredbg-macOS-arm64").setup()
+      -- require("netcoredbg-macOS-arm64").setup()
     end,
   },
   {
@@ -469,12 +469,13 @@ require('lazy').setup({
     {
       "CopilotC-Nvim/CopilotChat.nvim",
       dependencies = {
-        { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-        { "nvim-lua/plenary.nvim", branch = "master" },  -- for curl, log wrapper
+        { "zbirenbaum/copilot.lua" },                   -- or github/copilot.vim
+        { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log wrapper
       },
-      build = "make tiktoken", -- Only on MacOS or Linux
+      build = "make tiktoken",                          -- Only on MacOS or Linux
       opts = {
         -- debug = true, -- Enable debugging
+        model = 'gpt-5',
         window = {
           layout = 'float',
           relative = 'editor',
