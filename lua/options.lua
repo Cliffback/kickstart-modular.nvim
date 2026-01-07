@@ -454,30 +454,6 @@ require('copilot').setup({
   },
 })
 
--- Define a function to send 'exit' to the terminal
-function _G.send_exit_to_toggleterm()
-  local term = require('toggleterm.terminal').get(1) -- Get the first terminal instance
-  if term then
-    term:send('exit\n')
-  end
-end
-
--- Create a custom command to call this function
-vim.api.nvim_create_user_command('ToggleTermSendExit', 'lua send_exit_to_toggleterm()', {})
-vim.api.nvim_create_autocmd({ "TermEnter" }, {
-  callback = function()
-    for _, buffers in ipairs(vim.fn.getbufinfo()) do
-      local filetype = vim.api.nvim_buf_get_option(buffers.bufnr, "filetype")
-      if filetype == "toggleterm" then
-        vim.api.nvim_create_autocmd({ "BufWriteCmd", "FileWriteCmd", "FileAppendCmd" }, {
-          buffer = buffers.bufnr,
-          command = "q!",
-        })
-      end
-    end
-  end,
-})
-
 -- WSL yank support in init.lua
 
 if detect.IS_WSL then
