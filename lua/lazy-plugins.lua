@@ -480,7 +480,6 @@ require('lazy').setup({
       },
       build = "make tiktoken",                          -- Only on MacOS or Linux
       opts = {
-        model = 'gpt-4.1',
         -- debug = true, -- Enable debugging
         model = 'gpt-5',
         window = {
