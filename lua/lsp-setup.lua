@@ -66,11 +66,8 @@ local servers = {
   dockerls = {},
   docker_compose_language_service = {},
   eslint = {},
-  -- gradle_ls = {},
   html = {},
-  -- kotlin_language_server = {},
   marksman = {},
-  -- pylsp = {},
   shopify_theme_ls = {},
   sqlls = {},
   ts_ls = {
@@ -117,9 +114,11 @@ local servers = {
   },
 }
 
-
 if not detect.IS_WSL then
   servers.omnisharp = {}
+  servers.gradle_ls = {}
+  servers.kotlin_language_server = {}
+  servers.pylsp = {}
 end
 
 -- Setup neovim lua configuration
