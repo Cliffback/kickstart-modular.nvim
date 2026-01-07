@@ -59,6 +59,7 @@ local servers = {
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   bashls = {},
+  biome = {},
   cmake = {},
   omnisharp = {},
   dockerls = {},
