@@ -112,19 +112,6 @@ return {
           -- })
           return
         end
-        -- if client.name == 'ts_ls' then
-        --   vim.api.nvim_create_autocmd('BufWritePre', {
-        --     pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
-        --     command = 'silent! EslintFixAll',
-        --     group = get_augroup(client),
-        --   })
-        --   -- vim.api.nvim_create_autocmd('BufWritePre', {
-        --   --   pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
-        --   --   command = 'TSC',
-        --   --   group = get_augroup(client),
-        --   -- })
-        --   return
-        -- end
 
         -- Tsserver usually works poorly. Sorry you work with bad languages
         local serverOverrides = { 'ts_ls', 'typescript-tools', 'html', 'tsserver' }
