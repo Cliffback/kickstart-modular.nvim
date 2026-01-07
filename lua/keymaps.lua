@@ -321,7 +321,7 @@ vim.keymap.set("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>",
 -- vim.keymap.set("n", "<leader>xR", function() require("trouble").TroubleRefresh() end,
 --   { noremap = true, silent = true, desc = 'Refresh Active List' })
 
-  -- Telescop projects
+-- Telescop projects
 
 vim.keymap.set("n", "<leader>sp", ":Telescope projects<CR>",
   { noremap = true, silent = true, desc = '[S]earch Recent [P]rojects' })

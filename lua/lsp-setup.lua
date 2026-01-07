@@ -59,9 +59,8 @@ local servers = {
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   bashls = {},
-  -- cmake = {},
-  -- omnisharp = {},
   biome = {},
+  cmake = {},
   dockerls = {},
   docker_compose_language_service = {},
   eslint = {},
@@ -136,43 +135,15 @@ local handlers = {
   }
 }
 
-local on_attach = {
-  default = on_attach_keymaps,
-  ts_ls = function(client, bufnr)
-    if client.name == "ts_ls" then
-      -- Disable ts_ls formatting to use manual eslint on save
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentRangeFormattingProvider = false
-    end
-    on_attach_keymaps(client, bufnr)
+mason_lspconfig.setup_handlers {
+  function(server_name)
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach_keymaps,
+      settings = servers[server_name],
+      filetypes = (servers[server_name] or {}).filetypes,
+      handlers = handlers[server_name]
+    }
   end,
-  tsserver = function(client, bufnr)
-    if client.name == "tsserver" then
-      -- Disable tsserver formatting to use manual eslint on save
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentRangeFormattingProvider = false
-    end
-    on_attach_keymaps(client, bufnr)
-  end
 }
-
-local lspconfig = require("lspconfig")
-
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-  automatic_installation = true,
-}
-
-for server_name, server_config in pairs(servers) do
-  local on_attach_fn = on_attach[server_name] or on_attach.default
-
-  lspconfig[server_name].setup({
-    capabilities = capabilities,
-    on_attach = on_attach_fn,
-    settings = server_config,
-    filetypes = server_config.filetypes,
-    handlers = handlers[server_name],
-  })
-end
-
 -- -- vim: ts=2 sts=2 sw=2 et

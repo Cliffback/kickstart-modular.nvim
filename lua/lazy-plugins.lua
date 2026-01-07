@@ -437,7 +437,7 @@ require('lazy').setup({
       "ellisonleao/dotenv.nvim",
     },
     config = function()
-      require("netcoredbg-macOS-arm64").setup()
+      -- require("netcoredbg-macOS-arm64").setup()
     end,
   },
   {
@@ -516,6 +516,7 @@ require('lazy').setup({
       opts = {
         model = 'gpt-4.1',
         -- debug = true, -- Enable debugging
+        model = 'gpt-5',
         window = {
           layout = 'float',
           relative = 'editor',
