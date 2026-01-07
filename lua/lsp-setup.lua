@@ -2,6 +2,8 @@
 --  This function gets run when an LSP connects to a particular buffer.
 local keymaps = require('keymaps')
 
+local detect = require('utils.detect-os')
+
 local on_attach_keymaps = function(_, bufnr)
   keymaps.set_lsp_keymaps(_, bufnr)
 
@@ -114,6 +116,11 @@ local servers = {
     },
   },
 }
+
+
+if not detect.IS_WSL then
+  servers.omnisharp = {}
+end
 
 -- Setup neovim lua configuration
 require('neodev').setup()

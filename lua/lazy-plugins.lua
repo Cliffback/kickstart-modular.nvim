@@ -4,6 +4,9 @@
 --
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
+
+local detect = require('utils.detect-os')
+
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -429,7 +432,7 @@ require('lazy').setup({
   {
     "Cliffback/netcoredbg-macOS-arm64.nvim",
     cond = function()
-      return vim.loop.os_uname().sysname == "Darwin" -- only load on macOS
+      return detect.IS_MAC
     end,
     dependencies = {
       "mfussenegger/nvim-dap",
