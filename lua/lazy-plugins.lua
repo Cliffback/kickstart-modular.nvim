@@ -400,7 +400,7 @@ require('lazy').setup({
     dependencies = {
       "mfussenegger/nvim-dap",
       "rcarriga/nvim-dap-ui",
-      "ellisonleao/dotenv.nvim"
+      "ellisonleao/dotenv.nvim",
     },
     config = function()
       -- require("netcoredbg-macOS-arm64").setup()
@@ -501,8 +501,6 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons"
     }
   }
-
-
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
