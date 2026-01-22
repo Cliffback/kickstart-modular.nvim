@@ -2,6 +2,8 @@
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
+local detect = require('utils.detect-os')
+
 -- Enable line breaks
 vim.opt.linebreak = true
 vim.opt.breakat = " \t,-"
@@ -25,7 +27,10 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+
+if not detect.IS_WSL then
+  vim.o.clipboard = 'unnamedplus'
+end
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -445,10 +450,29 @@ vim.opt.showmode = false
 
 require('copilot').setup({
   suggestion = {
-    max_width = 80,  -- Set the maximum width of the popup window
+    max_width = 80, -- Set the maximum width of the popup window
   },
 })
 
+-- WSL yank support in init.lua
+
+if detect.IS_WSL then
+  local clip = "/mnt/c/Windows/System32/clip.exe" -- Adjust path if needed
+
+  if vim.fn.executable(clip) == 1 then
+    vim.api.nvim_create_augroup("WSLYank", { clear = true })
+
+    vim.api.nvim_create_autocmd("TextYankPost", {
+      group = "WSLYank",
+      callback = function()
+        if vim.v.event.operator == "y" then
+          local text = table.concat(vim.fn.getreg('"', 1, true), "\n")
+          vim.fn.system(clip, text)
+        end
+      end,
+    })
+  end
+end
 -- Registers copilot-chat source and enables it for copilot-chat filetype (so copilot chat window)
 -- require("CopilotChat.integrations.cmp").setup()
 -- vim: ts=2 sts=2 sw=2 et
