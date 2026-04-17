@@ -237,7 +237,7 @@ require('lazy').setup({
           -- scroll up float buffer
           up = { "<C-e>", "<C-u>" },
           -- enable/disable float windows
-          toggle = { "<C-x>" },
+          -- toggle = { "<C-x>" },
         },
         -- hooks if return false preview doesn't shown
         hooks = {
@@ -500,7 +500,40 @@ require('lazy').setup({
     {
       "nvim-tree/nvim-web-devicons"
     }
-  }
+  },
+
+  -- OpenCode
+  {
+    "nickjvandyke/opencode.nvim",
+    version = "*",
+    dependencies = {
+      {
+        ---@module "snacks"
+        "folke/snacks.nvim",
+        optional = true,
+        opts = {
+          input = {},
+          picker = {
+            actions = {
+              opencode_send = function(...) return require("opencode").snacks_picker_send(...) end,
+            },
+            win = {
+              input = {
+                keys = {
+                  ["<a-a>"] = { "opencode_send", mode = { "n", "i" } },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    config = function()
+      ---@type opencode.Opts
+      vim.g.opencode_opts = {}
+      vim.o.autoread = true
+    end,
+  },
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
