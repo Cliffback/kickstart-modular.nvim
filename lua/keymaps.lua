@@ -260,6 +260,7 @@ function M.set_lsp_keymaps(_, bufnr)
 end
 
 -- terminal
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<CR>")
 vim.keymap.set("t", "<C-j>", "<cmd>wincmd j<CR>")
 vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<CR>")
