@@ -130,14 +130,15 @@ vim.keymap.set('n', '<Leader>rq', close_rest_nvim_results,
   { desc = 'Close rest.nvim results panel', noremap = true, silent = true })
 
 
-vim.keymap.set('n', '<A-h>', "<cmd>wincmd h<CR>",
-  { desc = 'Close rest.nvim results panel', noremap = true, silent = true })
-vim.keymap.set('n', '<A-j>', "<cmd>wincmd j<CR>",
-  { desc = 'Close rest.nvim results panel', noremap = true, silent = true })
-vim.keymap.set('n', '<A-k>', "<cmd>wincmd k<CR>",
-  { desc = 'Close rest.nvim results panel', noremap = true, silent = true })
-vim.keymap.set('n', '<A-l>', "<cmd>wincmd l<CR>",
-  { desc = 'Close rest.nvim results panel', noremap = true, silent = true })
+-- Window navigation (Ctrl + direction)
+vim.keymap.set('n', '<C-h>', "<cmd>wincmd h<CR>",
+  { desc = 'Move to left window', noremap = true, silent = true })
+vim.keymap.set('n', '<C-j>', "<cmd>wincmd j<CR>",
+  { desc = 'Move to lower window', noremap = true, silent = true })
+vim.keymap.set('n', '<C-k>', "<cmd>wincmd k<CR>",
+  { desc = 'Move to upper window', noremap = true, silent = true })
+vim.keymap.set('n', '<C-l>', "<cmd>wincmd l<CR>",
+  { desc = 'Move to right window', noremap = true, silent = true })
 
 --vim.keymap.set('n', '<A-h>', '<cmd>wincmd h<CR>')
 local map = vim.api.nvim_set_keymap
@@ -242,7 +243,7 @@ function M.set_lsp_keymaps(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  nmap('gK', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -258,16 +259,11 @@ function M.set_lsp_keymaps(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
-vim.keymap.set("n", "<A-h>", "<C-w>h")
-vim.keymap.set("n", "<A-j>", "<C-w>j")
-vim.keymap.set("n", "<A-k>", "<C-w>k")
-vim.keymap.set("n", "<A-l>", "<C-w>l")
-
 -- terminal
-vim.keymap.set("t", "<A-h>", "<cmd>wincmd h<CR>")
-vim.keymap.set("t", "<A-j>", "<cmd>wincmd j<CR>")
-vim.keymap.set("t", "<A-k>", "<cmd>wincmd k<CR>")
-vim.keymap.set("t", "<A-l>", "<cmd>wincmd l<CR>")
+vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<CR>")
+vim.keymap.set("t", "<C-j>", "<cmd>wincmd j<CR>")
+vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<CR>")
+vim.keymap.set("t", "<C-l>", "<cmd>wincmd l<CR>")
 
 vim.keymap.set("n", "<A-Up>", ":resize -2<CR>")
 vim.keymap.set("n", "<A-Down>", ":resize +2<CR>")
