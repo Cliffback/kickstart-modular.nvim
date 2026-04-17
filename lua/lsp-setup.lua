@@ -151,5 +151,32 @@ mason_lspconfig.setup_handlers {
       handlers = handlers[server_name]
     }
   end,
+  -- ESLint v10 only supports flat config natively and removed the
+  -- 'eslint/use-at-your-own-risk' entry point. The default lspconfig
+  -- on_new_config sets experimental.useFlatConfig = true when it finds
+  -- an eslint.config.* file, which makes the language server try to
+  -- require that removed path. Override to prevent this.
+  ['eslint'] = function()
+    require('lspconfig').eslint.setup {
+      capabilities = capabilities,
+      on_attach = on_attach_keymaps,
+      settings = servers.eslint,
+      on_new_config = function(config, new_root_dir)
+        config.settings.workspaceFolder = {
+          uri = new_root_dir,
+          name = vim.fn.fnamemodify(new_root_dir, ':t'),
+        }
+        -- Do NOT set experimental.useFlatConfig for ESLint v10+.
+        -- The server auto-detects flat config from ESLint v10.
+
+        -- Support Yarn2 (PnP) projects
+        local pnp_cjs = new_root_dir .. '/.pnp.cjs'
+        local pnp_js = new_root_dir .. '/.pnp.js'
+        if vim.uv.fs_stat(pnp_cjs) or vim.uv.fs_stat(pnp_js) then
+          config.cmd = vim.list_extend({ 'yarn', 'exec' }, config.cmd)
+        end
+      end,
+    }
+  end,
 }
 -- -- vim: ts=2 sts=2 sw=2 et
