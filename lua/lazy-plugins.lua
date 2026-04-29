@@ -32,7 +32,7 @@ require('lazy').setup({
       { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
+      { 'folke/lazydev.nvim', opts = {} },
     },
   },
 
@@ -545,12 +545,7 @@ require('lazy').setup({
     },
     build = function() require("gitlab.server").build(true) end, -- Builds the Go binary
     config = function()
-      require("gitlab").setup({
-        debug = { request = true, response = true, gitlab_request = true, gitlab_response = true },
-        connection_settings = {
-          insecure = true,
-        },
-      })
+      require("gitlab").setup()
     end,
   }
 
