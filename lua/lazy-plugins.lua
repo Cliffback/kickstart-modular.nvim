@@ -534,6 +534,25 @@ require('lazy').setup({
       vim.o.autoread = true
     end,
   },
+  {
+    "harrisoncramer/gitlab.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "dlyongemallo/diffview.nvim",                              -- Maintained fork of "sindrets/diffview.nvim".
+      "stevearc/dressing.nvim",                                  -- Recommended but not required. Better UI for pickers.
+      "nvim-tree/nvim-web-devicons",                             -- Recommended but not required. Icons in discussion tree.
+    },
+    build = function() require("gitlab.server").build(true) end, -- Builds the Go binary
+    config = function()
+      require("gitlab").setup({
+        debug = { request = true, response = true, gitlab_request = true, gitlab_response = true },
+        connection_settings = {
+          insecure = true,
+        },
+      })
+    end,
+  }
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
