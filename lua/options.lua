@@ -411,9 +411,10 @@ require('Comment').setup({
   post_hook = nil,
 })
 
-require 'lspconfig'.sourcekit.setup {
-  cmd = { '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp' }
-}
+vim.lsp.config('sourcekit', {
+  cmd = { '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp' },
+})
+vim.lsp.enable('sourcekit')
 
 require('tsc').setup({
   -- use_diagnostics = true,
