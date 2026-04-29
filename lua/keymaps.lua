@@ -242,7 +242,7 @@ function M.set_lsp_keymaps(_, bufnr)
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+  nmap('K', function() vim.lsp.buf.hover({ border = 'rounded', max_width = 80 }) end, 'Hover Documentation')
   nmap('gK', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
