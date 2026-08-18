@@ -46,13 +46,6 @@ return {
     },
   },
 
-  {
-    'lukas-reineke/indent-blankline.nvim',
-    main = 'ibl',
-    event = { 'BufReadPost', 'BufNewFile' },
-    opts = {},
-  },
-
   -- Buffer line
   {
     'romgrk/barbar.nvim',
@@ -145,19 +138,9 @@ return {
     },
   },
 
-  {
-    'rcarriga/nvim-notify',
-    event = 'VeryLazy',
-    config = function()
-      vim.notify = require 'notify'
-    end,
-  },
-
-  {
-    'stevearc/dressing.nvim',
-    event = 'VeryLazy',
-    opts = {},
-  },
+  -- NOTE: indent-blankline.nvim, nvim-notify and dressing.nvim were replaced by
+  -- snacks.nvim (indent / notifier / input + picker.ui_select). dressing was
+  -- the forcing function: archived February 2025.
 
   {
     'folke/which-key.nvim',

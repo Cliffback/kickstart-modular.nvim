@@ -88,7 +88,6 @@ return {
       'MunifTanjim/nui.nvim',
       'nvim-lua/plenary.nvim',
       'dlyongemallo/diffview.nvim', -- maintained fork of sindrets/diffview.nvim
-      'stevearc/dressing.nvim',
       'nvim-tree/nvim-web-devicons',
     },
     build = function()

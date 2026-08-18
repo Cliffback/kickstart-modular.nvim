@@ -259,16 +259,7 @@ return {
     opts = {},
   },
 
-  {
-    'ahmedkhalf/project.nvim',
-    main = 'project_nvim',
-    event = 'VeryLazy',
-    opts = {
-      manual_mode = true,
-      detection_methods = { 'pattern', 'lsp' },
-      patterns = { '.csproj', 'package.json' },
-    },
-  },
+  -- NOTE: project.nvim was replaced by snacks.picker's `projects` source.
 
   -- Detect tabstop and shiftwidth automatically
   { 'tpope/vim-sleuth', event = { 'BufReadPost', 'BufNewFile' } },
