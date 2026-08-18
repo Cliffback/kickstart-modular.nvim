@@ -36,6 +36,11 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- [[ Git worktree session switching ]]
+-- Follows `wt switch` / `cd` between worktrees from a :terminal. See the module
+-- for why this uses OSC 7 rather than anything worktrunk-specific.
+require('config.worktree').setup()
+
 -- [[ WSL clipboard ]]
 -- WSL has no native clipboard integration, so pipe yanks through clip.exe.
 if detect.IS_WSL then

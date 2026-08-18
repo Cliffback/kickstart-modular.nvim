@@ -44,7 +44,13 @@ map('n', '<A-Left>', '<cmd>vertical resize -2<CR>', { silent = true, desc = 'Shr
 map('n', '<A-Right>', '<cmd>vertical resize +2<CR>', { silent = true, desc = 'Grow window width' })
 
 -- [[ Terminal ]]
-map('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+--
+-- NOTE: <Esc> is deliberately NOT mapped. A global terminal-mode <Esc> means
+-- the key never reaches the program running inside, which breaks every TUI:
+-- opencode (Esc interrupts / goes back), lazygit, htop, nested nvim.
+-- <Esc><Esc> exits to normal mode instead, leaving single <Esc> to pass
+-- through untouched.
+map('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 map('t', '<C-h>', '<cmd>wincmd h<CR>', { desc = 'Move to left window' })
 map('t', '<C-j>', '<cmd>wincmd j<CR>', { desc = 'Move to lower window' })
 map('t', '<C-k>', '<cmd>wincmd k<CR>', { desc = 'Move to upper window' })
@@ -57,6 +63,11 @@ map('t', '<A-Right>', '<cmd>vertical resize +2<CR>', { desc = 'Grow window width
 -- [[ Formatting ]]
 -- NOTE: was <C-f>, which shadowed the built-in page-forward motion.
 map({ 'n', 'v' }, '<leader>f', '<cmd>Format<CR>', { silent = true, desc = 'Format buffer/selection' })
+
+-- [[ Worktrees ]]
+map('n', '<leader>wt', function()
+  require('config.worktree').switch_to_terminal_cwd()
+end, { desc = '[W]ork[t]ree: switch session to terminal cwd' })
 
 -- [[ LSP ]]
 -- Applied per-buffer from the LspAttach autocmd in config/lsp.lua.
@@ -121,7 +132,7 @@ function M.setup_which_key()
     { '<leader>r', group = '[R]ename' },
     { '<leader>s', group = '[S]earch' },
     { '<leader>t', group = '[T]oggle' },
-    { '<leader>w', group = '[W]orkspace' },
+    { '<leader>w', group = '[W]orkspace / [W]orktree' },
     { '<leader>x', group = 'Diagnostics ([X])' },
 
     -- which-key picks icons by matching the description against its rule

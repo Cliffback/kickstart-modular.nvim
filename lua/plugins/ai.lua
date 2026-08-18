@@ -1,5 +1,26 @@
 -- [[ AI ]]
 
+-- opencode.nvim is a bridge, not a UI: it connects to a running `opencode`
+-- server and drives its TUI. It deliberately owns no window, which is why it
+-- exposes no `toggle()` - the TUI lives in whatever terminal you put it in.
+--
+-- So we put it in a toggleterm float and toggle *that*. opencode.nvim finds it
+-- by scanning for `opencode` processes and matching their cwd against Neovim's,
+-- so this instance is discovered automatically.
+local opencode_term
+local function get_opencode_term()
+  if not opencode_term then
+    opencode_term = require('toggleterm.terminal').Terminal:new {
+      cmd = 'opencode --port',
+      direction = 'float',
+      hidden = true,
+      close_on_exit = false,
+      float_opts = { border = 'curved' },
+    }
+  end
+  return opencode_term
+end
+
 return {
   -- NOTE: github/copilot.vim was removed. It ran alongside copilot.lua, giving
   -- two ghost-text providers, and claimed <Tab> in insert mode.
@@ -116,7 +137,16 @@ return {
   {
     'nickjvandyke/opencode.nvim',
     version = '*',
+    dependencies = { 'akinsho/toggleterm.nvim' },
     keys = {
+      {
+        '<leader>ot',
+        function()
+          get_opencode_term():toggle()
+        end,
+        mode = { 'n', 't' },
+        desc = 'Toggle opencode',
+      },
       {
         '<leader>oa',
         function()
@@ -132,14 +162,6 @@ return {
         end,
         mode = { 'n', 'x' },
         desc = 'Execute opencode action',
-      },
-      {
-        '<leader>ot',
-        function()
-          require('opencode').toggle()
-        end,
-        mode = { 'n', 't' },
-        desc = 'Toggle opencode',
       },
       {
         '<leader>oo',
@@ -158,24 +180,57 @@ return {
         expr = true,
         desc = 'Add line to opencode',
       },
+      -- Contexts other than @this had no bindings at all.
       {
-        '<leader>ou',
+        '<leader>od',
+        function()
+          require('opencode').ask 'Explain @diagnostics: '
+        end,
+        desc = 'Ask opencode about @[d]iagnostics',
+      },
+      {
+        '<leader>ob',
+        function()
+          require('opencode').ask '@buffers: '
+        end,
+        desc = 'Ask opencode about @[b]uffers',
+      },
+      {
+        '<leader>oq',
+        function()
+          require('opencode').ask '@quickfix: '
+        end,
+        desc = 'Ask opencode about @[q]uickfix',
+      },
+      -- Scrolling the TUI from Neovim. Moved off <leader>ou/<leader>od to the
+      -- keys upstream recommends, freeing <leader>od for @diagnostics.
+      {
+        '<C-S-u>',
         function()
           require('opencode').command 'session.half.page.up'
         end,
         desc = 'Scroll opencode up',
       },
       {
-        '<leader>od',
+        '<C-S-d>',
         function()
           require('opencode').command 'session.half.page.down'
         end,
         desc = 'Scroll opencode down',
       },
     },
-    config = function()
+    init = function()
+      -- Set before the plugin loads: opencode.config resolves vim.g at require
+      -- time. Start the server in our toggleterm float rather than the default
+      -- raw `vsplit term://opencode --port`.
       ---@type opencode.Opts
-      vim.g.opencode_opts = {}
+      vim.g.opencode_opts = {
+        server = {
+          start = function()
+            get_opencode_term():open()
+          end,
+        },
+      }
       vim.o.autoread = true
     end,
   },

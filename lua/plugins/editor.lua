@@ -22,6 +22,11 @@ return {
           wrap_nvimtree_commands = true,
           scroll_lines = 20,
           window = {
+            -- Same shallow-merge caveat as `mapping` above: spell out the
+            -- defaults rather than relying on them surviving the merge.
+            style = 'minimal',
+            relative = 'editor',
+            border = 'single',
             wrap = false,
             trim_height = false,
             open_win_config = function()
@@ -41,9 +46,18 @@ return {
               }
             end,
           },
+          -- NOTE: float-preview merges config with vim.tbl_extend('force'), a
+          -- *shallow* merge, so this table replaces the plugin's defaults
+          -- wholesale. Every key it reads must be present: attach() iterates
+          -- mapping.toggle unconditionally, so omitting it crashes <leader>n
+          -- with "bad argument #1 to 'ipairs'". An empty list keeps the
+          -- original intent (no toggle key) without the crash.
           mapping = {
             down = { '<C-d>' },
+            -- <C-e> is deliberately dropped from the default { '<C-e>', '<C-u>' }
+            -- because nvim-tree binds it to open-in-place below.
             up = { '<C-u>' },
+            toggle = {},
           },
           hooks = {
             -- Don't preview files over 5 MB or non-text files.

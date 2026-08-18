@@ -25,6 +25,24 @@ return {
         component_separators = '|',
         section_separators = '',
       },
+      sections = {
+        lualine_x = {
+          -- opencode session status (idle/working/etc). Only renders once
+          -- opencode.nvim is loaded, so this costs nothing at startup.
+          {
+            function()
+              local ok, oc = pcall(require, 'opencode')
+              return ok and oc.statusline() or ''
+            end,
+            cond = function()
+              return package.loaded['opencode'] ~= nil
+            end,
+          },
+          'encoding',
+          'fileformat',
+          'filetype',
+        },
+      },
     },
   },
 
