@@ -27,15 +27,21 @@ return {
       },
       sections = {
         lualine_x = {
-          -- opencode session status (idle/working/etc). Only renders once
-          -- opencode.nvim is loaded, so this costs nothing at startup.
+          -- opencode session status. Shows which instance is connected by
+          -- directory, which matters now that there is one per worktree -
+          -- the plugin's own statusline() shows `localhost:4096` instead.
           {
             function()
-              local ok, oc = pcall(require, 'opencode')
-              return ok and oc.statusline() or ''
+              local ok, status = pcall(require, 'opencode.events.status')
+              if not ok then
+                return ''
+              end
+              local server_ok, Server = pcall(require, 'opencode.server')
+              local cwd = server_ok and Server.connected and Server.connected.cwd
+              return status.icon() .. (cwd and (' ' .. vim.fs.basename(cwd)) or '')
             end,
             cond = function()
-              return package.loaded['opencode'] ~= nil
+              return package.loaded['opencode.server'] ~= nil
             end,
           },
           'encoding',

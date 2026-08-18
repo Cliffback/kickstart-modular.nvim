@@ -25,6 +25,39 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- fallback - lives in plugins/treesitter.lua.)
 vim.treesitter.language.register('html', { 'htmldjango', 'liquid' })
 
+-- [[ Terminals ]]
+--
+-- Entering a terminal window should put you in terminal mode. Neovim otherwise
+-- leaves you in normal mode and you have to press `i` every time.
+--
+-- Note this only fires when *entering* a terminal window. Pressing <Esc><Esc>
+-- to reach normal mode and scroll back through output keeps working, because
+-- staying in the same window fires no event.
+local term_group = vim.api.nvim_create_augroup('TerminalMode', { clear = true })
+
+vim.api.nvim_create_autocmd('TermOpen', {
+  group = term_group,
+  desc = 'Start in terminal mode and drop UI chrome',
+  callback = function()
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+    vim.opt_local.signcolumn = 'no'
+    vim.cmd 'startinsert'
+  end,
+})
+
+vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
+  group = term_group,
+  pattern = 'term://*',
+  desc = 'Re-enter terminal mode when returning to a live terminal',
+  callback = function(ev)
+    -- Only if the job is still running; a finished terminal is just a buffer.
+    if vim.bo[ev.buf].buftype == 'terminal' and vim.b[ev.buf].terminal_job_id then
+      vim.cmd 'startinsert'
+    end
+  end,
+})
+
 -- [[ Git worktree session switching ]]
 -- Follows `wt switch` / `cd` between worktrees from a :terminal. See the module
 -- for why this uses OSC 7 rather than anything worktrunk-specific.

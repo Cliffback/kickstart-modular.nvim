@@ -5,11 +5,30 @@ return {
   {
     'akinsho/toggleterm.nvim',
     version = '*',
-    keys = { { [[<C-\>]], desc = 'Toggle terminal' } },
+    -- NOTE: `open_mapping` is deliberately unset. It installs a *buffer-local*
+    -- <C-\> on every terminal toggleterm creates - including opencode's - bound
+    -- to a bare `:ToggleTerm`. Bare ToggleTerm runs smart_toggle, which closes
+    -- every open toggleterm window rather than toggling one, so pressing <C-\>
+    -- inside opencode closed opencode instead of opening a shell. And because
+    -- the mapping is buffer-local it beat any global override.
+    --
+    -- `1ToggleTerm` routes to toggle_nth_term(1), which touches only terminal 1.
+    -- opencode's terminals start at id 90 (see config/opencode-term.lua), so the
+    -- two can be open at once and toggle independently.
+    keys = {
+      { [[<C-\>]], '<Cmd>1ToggleTerm<CR>', mode = { 'n', 't' }, desc = 'Toggle terminal' },
+    },
     cmd = { 'ToggleTerm', 'TermExec' },
     opts = {
-      size = 20,
-      open_mapping = [[<c-\>]],
+      -- Resolved per terminal (ui.lua:408 -> _resolve_size), so branch on
+      -- direction: the opencode sidebar wants ~40% of the screen width, a
+      -- horizontal split wants a modest number of lines.
+      size = function(term)
+        if term.direction == 'vertical' then
+          return math.floor(vim.o.columns * 0.4)
+        end
+        return 20
+      end,
       hide_numbers = true,
       shade_filetypes = {},
       shade_terminals = true,
@@ -17,6 +36,9 @@ return {
       start_in_insert = true,
       insert_mappings = true,
       persist_size = true,
+      -- Always land in terminal mode when toggling back in, rather than
+      -- restoring whatever mode was left behind.
+      persist_mode = false,
       direction = 'float',
       close_on_exit = true,
       shell = vim.o.shell,

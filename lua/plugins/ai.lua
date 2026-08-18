@@ -3,22 +3,78 @@
 -- opencode.nvim is a bridge, not a UI: it connects to a running `opencode`
 -- server and drives its TUI. It deliberately owns no window, which is why it
 -- exposes no `toggle()` - the TUI lives in whatever terminal you put it in.
---
--- So we put it in a toggleterm float and toggle *that*. opencode.nvim finds it
--- by scanning for `opencode` processes and matching their cwd against Neovim's,
--- so this instance is discovered automatically.
-local opencode_term
-local function get_opencode_term()
-  if not opencode_term then
-    opencode_term = require('toggleterm.terminal').Terminal:new {
-      cmd = 'opencode --port',
-      direction = 'float',
-      hidden = true,
-      close_on_exit = false,
-      float_opts = { border = 'curved' },
-    }
+-- We host it in a right sidebar, one instance per directory; see
+-- lua/config/opencode-term.lua.
+
+---Is `a` the same path as `b`, or inside it?
+---
+---This is the boundary-correct version of the comparison opencode.nvim makes
+---in server/discovery/init.lua, which uses a bare string prefix:
+---
+---  server.cwd:find(nvim_cwd, 0, true) == 1 or nvim_cwd:find(server.cwd, 0, true) == 1
+---
+---With no separator check, `/dev/statnett-designsystem` (the main repo) is a
+---prefix of `/dev/statnett-designsystem-wt/<branch>` (every worktree), so a
+---single opencode running in the main repo matches *every* worktree session and
+---silently receives prompts meant for a different tree.
+---@param a string
+---@param b string
+---@return boolean
+local function under(a, b)
+  return a == b or a:sub(1, #b + 1) == b .. '/'
+end
+
+---Resolve the opencode server whose cwd genuinely corresponds to Neovim's.
+---
+---`server.url` is consulted before the built-in cwd filter (discovery tries
+---connected -> configured -> local+filter), so this bypasses the loose match
+---entirely. Resolving nil is safe: it rejects, and discovery falls through to
+---`server.start`, which starts one in the current directory. Worst case that is
+---an extra instance, never the wrong tree.
+---@param cb fun(url: string?)
+local function resolve_server_url(cb)
+  local ok, discovery = pcall(require, 'opencode.server.discovery.process')
+  if not ok then
+    return cb(nil)
   end
-  return opencode_term
+
+  local Promise = require 'opencode.promise'
+  local Server = require 'opencode.server'
+  local nvim_cwd = vim.fs.normalize(vim.fn.getcwd())
+
+  discovery
+    .get()
+    :next(function(processes)
+      if #processes == 0 then
+        cb(nil)
+        return Promise.resolve()
+      end
+
+      return Promise.all_settled(vim.tbl_map(function(process)
+        return Server.new('http://localhost:' .. process.port)
+      end, processes)):next(function(results)
+        local best, best_cwd
+
+        for _, result in ipairs(results) do
+          local server = result.status == 'fulfilled' and result.value
+          if server and server.cwd then
+            local cwd = vim.fs.normalize(server.cwd)
+            if under(nvim_cwd, cwd) or under(cwd, nvim_cwd) then
+              -- Several can legitimately match (a server in a subdirectory of
+              -- the one Neovim sits in). Prefer the most specific.
+              if not best_cwd or #cwd > #best_cwd then
+                best, best_cwd = server, cwd
+              end
+            end
+          end
+        end
+
+        cb(best and best.url or nil)
+      end)
+    end)
+    :catch(function()
+      cb(nil)
+    end)
 end
 
 return {
@@ -142,15 +198,23 @@ return {
       {
         '<leader>ot',
         function()
-          get_opencode_term():toggle()
+          require('config.opencode-term').toggle()
         end,
-        mode = { 'n', 't' },
+        -- NOTE: normal mode only. This used to include terminal mode, which
+        -- meant typing a space followed by `ot` in any shell fired the toggle
+        -- instead of inserting the text.
         desc = 'Toggle opencode',
       },
       {
         '<leader>oa',
         function()
-          require('opencode').ask('@this: ', { submit = true })
+          -- Show the sidebar when we own the instance, so the reply is visible.
+          -- opencode only ever types into its TUI; Neovim never sees the answer.
+          local term = require 'config.opencode-term'
+          if term.is_running() then
+            term.open()
+          end
+          require('opencode').ask '@this: '
         end,
         mode = { 'n', 'x' },
         desc = 'Ask opencode',
@@ -221,13 +285,16 @@ return {
     },
     init = function()
       -- Set before the plugin loads: opencode.config resolves vim.g at require
-      -- time. Start the server in our toggleterm float rather than the default
-      -- raw `vsplit term://opencode --port`.
+      -- time.
       ---@type opencode.Opts
       vim.g.opencode_opts = {
         server = {
+          -- Consulted before the built-in (loose) cwd filter.
+          url = resolve_server_url,
+          -- Start the TUI in our right sidebar for the current directory,
+          -- rather than the default raw `vsplit term://opencode --port`.
           start = function()
-            get_opencode_term():open()
+            require('config.opencode-term').open()
           end,
         },
       }

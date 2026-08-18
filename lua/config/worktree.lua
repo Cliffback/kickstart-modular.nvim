@@ -75,22 +75,27 @@ local function restart_lsp()
 end
 
 ---Drop the opencode server connection so the next interaction rediscovers one
----matching the new cwd.
+---matching the new cwd, and shut down the instance we were running for the
+---worktree being left, so they do not accumulate one per branch visited.
 ---
----NOTE: do *not* route this through `opencode.command('server.disconnect')`.
----That goes through the connect flow first, which starts a server when none is
----found - so "disconnect" would spawn an opencode in the worktree we are
----leaving. Talk to the connected server directly, and do nothing if there is
----none.
-local function disconnect_opencode()
-  if not package.loaded['opencode.server'] then
-    return
+---NOTE: do *not* route the disconnect through
+---`opencode.command('server.disconnect')`. That goes through the connect flow
+---first, which starts a server when none is found - so "disconnect" would spawn
+---an opencode in the worktree we are leaving. Talk to the connected server
+---directly, and do nothing if there is none.
+---@param old_root string
+local function reset_opencode(old_root)
+  if package.loaded['opencode.server'] then
+    pcall(function()
+      local Server = require 'opencode.server'
+      if Server.connected then
+        Server.connected:disconnect()
+      end
+    end)
   end
+
   pcall(function()
-    local Server = require 'opencode.server'
-    if Server.connected then
-      Server.connected:disconnect()
-    end
+    require('config.opencode-term').close(old_root)
   end)
 end
 
@@ -110,7 +115,7 @@ function M.switch(new_root)
   vim.cmd.cd(vim.fn.fnameescape(new_root))
   local moved, kept = remap_buffers(old_root, new_root)
   restart_lsp()
-  disconnect_opencode()
+  reset_opencode(old_root)
 
   local msg = ('Worktree: %s'):format(vim.fs.basename(new_root))
   if moved > 0 or kept > 0 then

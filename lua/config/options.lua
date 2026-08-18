@@ -36,7 +36,10 @@ vim.o.signcolumn = 'yes'
 vim.o.showmode = false
 
 vim.o.updatetime = 250
-vim.o.timeoutlen = 300
+-- NOTE: kickstart set this to 300 to make which-key feel responsive. which-key
+-- v3 has its own `delay`, so the only thing 300ms still affects is multi-key
+-- mappings like <Esc><Esc> in terminal mode, where it is needlessly tight.
+vim.o.timeoutlen = 500
 
 vim.o.completeopt = 'menuone,noselect'
 
