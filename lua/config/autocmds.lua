@@ -20,21 +20,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 --
 -- There is no `htmldjango` treesitter parser, so highlighting silently fell
 -- back to legacy regex syntax. Point those filetypes at the html parser.
--- (The matching LSP `filetypes` widening lives in config/lsp.lua.)
+-- (The matching LSP `filetypes` widening lives in config/lsp.lua, and the
+-- FileType handler that actually calls vim.treesitter.start - with a syntax
+-- fallback - lives in plugins/treesitter.lua.)
 vim.treesitter.language.register('html', { 'htmldjango', 'liquid' })
-
--- Safety net: if `vim.treesitter.start()` ever fails (an unparseable template,
--- a missing parser), restore regex syntax rather than leaving a plain-text
--- buffer with no highlighting at all.
-vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('TreesitterHighlightFallback', { clear = true }),
-  pattern = { 'html', 'htmldjango', 'liquid' },
-  callback = function(ev)
-    if not pcall(vim.treesitter.start, ev.buf) then
-      vim.bo[ev.buf].syntax = 'ON'
-    end
-  end,
-})
 
 -- [[ Git worktree session switching ]]
 -- Follows `wt switch` / `cd` between worktrees from a :terminal. See the module
