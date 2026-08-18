@@ -19,7 +19,7 @@ return {
       { 'folke/lazydev.nvim', ft = 'lua', opts = {} },
       'b0o/schemastore.nvim',
       'Hoffs/omnisharp-extended-lsp.nvim',
-      'hrsh7th/cmp-nvim-lsp',
+      'saghen/blink.cmp',
     },
     config = function()
       require 'config.lsp'

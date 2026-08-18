@@ -74,7 +74,7 @@ require('mason-tool-installer').setup {
 
 -- Completion capabilities, applied to every server at once.
 vim.lsp.config('*', {
-  capabilities = require('cmp_nvim_lsp').default_capabilities(),
+  capabilities = require('blink.cmp').get_lsp_capabilities(),
 })
 
 -- Server-specific overrides layered on top of the settings table.
