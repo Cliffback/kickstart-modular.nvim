@@ -29,7 +29,7 @@ local M = {}
 --- Returns true if Neovim is running in WSL (Windows Subsystem for Linux).
 function M.is_wsl()
   local uname = uv.os_uname()
-  if uname.sysname ~= "Linux" then
+  if uname.sysname ~= 'Linux' then
     return false
   end
 
@@ -39,30 +39,30 @@ function M.is_wsl()
   end
 
   -- Kernel release often contains "Microsoft" or "wsl"
-  local rel = (uname.release or ""):lower()
-  return rel:find("microsoft") ~= nil or rel:find("wsl") ~= nil
+  local rel = (uname.release or ''):lower()
+  return rel:find 'microsoft' ~= nil or rel:find 'wsl' ~= nil
 end
 
 --- Returns true if running on native Windows (not WSL).
 function M.is_windows()
   -- In WSL, sysname is Linux; Windows_NT indicates native Windows
-  return uv.os_uname().sysname == "Windows_NT"
+  return uv.os_uname().sysname == 'Windows_NT'
 end
 
 --- Returns true if running on macOS.
 function M.is_macos()
-  return uv.os_uname().sysname == "Darwin"
+  return uv.os_uname().sysname == 'Darwin'
 end
 
 --- Returns true if running on Linux (including WSL).
 function M.is_linux()
-  return uv.os_uname().sysname == "Linux"
+  return uv.os_uname().sysname == 'Linux'
 end
 
 -- Cached convenience flags (computed once)
-M.IS_WSL     = M.is_wsl()
+M.IS_WSL = M.is_wsl()
 M.IS_WINDOWS = M.is_windows()
-M.IS_MAC     = M.is_macos()
-M.IS_LINUX   = M.is_linux()
+M.IS_MAC = M.is_macos()
+M.IS_LINUX = M.is_linux()
 
 return M
