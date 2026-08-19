@@ -38,10 +38,28 @@ map('n', '<C-j>', '<cmd>wincmd j<CR>', { silent = true, desc = 'Move to lower wi
 map('n', '<C-k>', '<cmd>wincmd k<CR>', { silent = true, desc = 'Move to upper window' })
 map('n', '<C-l>', '<cmd>wincmd l<CR>', { silent = true, desc = 'Move to right window' })
 
-map('n', '<A-Up>', '<cmd>resize -2<CR>', { silent = true, desc = 'Shrink window height' })
-map('n', '<A-Down>', '<cmd>resize +2<CR>', { silent = true, desc = 'Grow window height' })
-map('n', '<A-Left>', '<cmd>vertical resize -2<CR>', { silent = true, desc = 'Shrink window width' })
-map('n', '<A-Right>', '<cmd>vertical resize +2<CR>', { silent = true, desc = 'Grow window width' })
+-- Arrow-key aliases for the above. Not redundant: under Workman on the split
+-- keyboard, hjkl land on physical d/y/n/m (two hands, three rows), so <C-hjkl>
+-- is a bad chord there. Arrow keys sit in the same physical spot on every
+-- layout, which keeps window nav identical on the Workman split and the QWERTY
+-- laptop. Both sets stay live -- <C-hjkl> is still the better chord on QWERTY.
+map('n', '<C-Left>', '<cmd>wincmd h<CR>', { silent = true, desc = 'Move to left window' })
+map('n', '<C-Down>', '<cmd>wincmd j<CR>', { silent = true, desc = 'Move to lower window' })
+map('n', '<C-Up>', '<cmd>wincmd k<CR>', { silent = true, desc = 'Move to upper window' })
+map('n', '<C-Right>', '<cmd>wincmd l<CR>', { silent = true, desc = 'Move to right window' })
+
+-- Resize. NOTE: these were <A-Arrow>, which is the most widely intercepted
+-- chord in desktop computing -- macOS terminals bind Alt+Left/Right to
+-- word-motion, GNOME/KDE use it for workspace switching, Windows for window
+-- snapping. This config runs on all three (see utils/detect-os.lua), so the
+-- maps were unreliable exactly where it mattered. <C-S-Arrow> is free and pairs
+-- mnemonically with the nav maps above: same key, shift resizes instead of
+-- moving. Requires a terminal that disambiguates Ctrl+Shift (CSI-u /
+-- modifyOtherKeys) -- the <C-S-u>/<C-S-d> opencode maps rely on the same thing.
+map('n', '<C-S-Up>', '<cmd>resize -2<CR>', { silent = true, desc = 'Shrink window height' })
+map('n', '<C-S-Down>', '<cmd>resize +2<CR>', { silent = true, desc = 'Grow window height' })
+map('n', '<C-S-Left>', '<cmd>vertical resize -2<CR>', { silent = true, desc = 'Shrink window width' })
+map('n', '<C-S-Right>', '<cmd>vertical resize +2<CR>', { silent = true, desc = 'Grow window width' })
 
 -- [[ Terminal ]]
 --
@@ -55,10 +73,14 @@ map('t', '<C-h>', '<cmd>wincmd h<CR>', { desc = 'Move to left window' })
 map('t', '<C-j>', '<cmd>wincmd j<CR>', { desc = 'Move to lower window' })
 map('t', '<C-k>', '<cmd>wincmd k<CR>', { desc = 'Move to upper window' })
 map('t', '<C-l>', '<cmd>wincmd l<CR>', { desc = 'Move to right window' })
-map('t', '<A-Up>', '<cmd>resize -2<CR>', { desc = 'Shrink window height' })
-map('t', '<A-Down>', '<cmd>resize +2<CR>', { desc = 'Grow window height' })
-map('t', '<A-Left>', '<cmd>vertical resize -2<CR>', { desc = 'Shrink window width' })
-map('t', '<A-Right>', '<cmd>vertical resize +2<CR>', { desc = 'Grow window width' })
+map('t', '<C-Left>', '<cmd>wincmd h<CR>', { desc = 'Move to left window' })
+map('t', '<C-Down>', '<cmd>wincmd j<CR>', { desc = 'Move to lower window' })
+map('t', '<C-Up>', '<cmd>wincmd k<CR>', { desc = 'Move to upper window' })
+map('t', '<C-Right>', '<cmd>wincmd l<CR>', { desc = 'Move to right window' })
+map('t', '<C-S-Up>', '<cmd>resize -2<CR>', { desc = 'Shrink window height' })
+map('t', '<C-S-Down>', '<cmd>resize +2<CR>', { desc = 'Grow window height' })
+map('t', '<C-S-Left>', '<cmd>vertical resize -2<CR>', { desc = 'Shrink window width' })
+map('t', '<C-S-Right>', '<cmd>vertical resize +2<CR>', { desc = 'Grow window width' })
 
 -- [[ Formatting ]]
 -- NOTE: was <C-f>, which shadowed the built-in page-forward motion.
@@ -119,6 +141,12 @@ function M.setup_which_key()
   local wk = require 'which-key'
 
   wk.add {
+    -- Not a mapping -- just labels the built-in <C-w> prefix so its window
+    -- commands (+ - < > = s v q o) become discoverable in the popup. Worth
+    -- surfacing because they are count-aware (5<C-w>>) and, being plain vim,
+    -- are never swallowed by a terminal or window manager.
+    { '<C-w>', group = 'Window' },
+
     { '<leader>b', group = '[B]uffer order' },
     { '<leader>c', group = '[C]ode' },
     { '<leader>cc', group = '[C]opilot [C]hat' },

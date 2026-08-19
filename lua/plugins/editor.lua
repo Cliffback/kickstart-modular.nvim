@@ -159,6 +159,13 @@ return {
         map('n', '<C-d>', api.tree.toggle_hidden_filter, opts 'Toggle Filter: Dotfiles')
         map('n', 'L', close_wrap(api.node.open.edit), opts 'Open')
         map('n', 'h', api.node.navigate.parent_close, opts 'Close')
+        -- Arrow aliases for h/l. Same reasoning as the <C-Arrow> window nav in
+        -- config/keymaps.lua: h/l sit on physical d/m under Workman on the
+        -- split, arrows do not move between layouts. Both keys were unbound --
+        -- this on_attach replaces the defaults wholesale rather than extending
+        -- them, so there is nothing to collide with.
+        map('n', '<Right>', close_wrap(api.node.open.edit), opts 'Open')
+        map('n', '<Left>', api.node.navigate.parent_close, opts 'Close')
         map('n', '<C-c>', api.tree.collapse_all, opts 'Collapse All')
 
         -- Unmap esc to avoid accidentally going up one directory
@@ -235,6 +242,71 @@ return {
       { '<leader>xl', '<cmd>Trouble lsp toggle focus=false win.position=right<cr>', desc = 'LSP references (Trouble)' },
       { '<leader>xL', '<cmd>Trouble loclist toggle<cr>', desc = 'Location List (Trouble)' },
       { '<leader>xQ', '<cmd>Trouble qflist toggle<cr>', desc = 'Quickfix List (Trouble)' },
+    },
+  },
+
+  -- Jump motions
+  --
+  -- Label-driven jumps, so vertical/horizontal movement stops being hjkl
+  -- repetition. Layout-neutral: you type the label shown on screen rather than
+  -- a fixed key, which is what makes it behave identically on the Workman
+  -- split and the QWERTY laptop.
+  --
+  -- NOTE: this takes over normal-mode `s`/`S` (substitute char/line). Those are
+  -- redundant with `cl`/`cc`. nvim-tree binds `s`/`S` buffer-locally above, and
+  -- buffer-local wins, so Run System / Search inside the tree are unaffected.
+  -- `r`/`R` are mapped in operator/visual only, so replace-char and
+  -- replace-mode both survive.
+  {
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    ---@type Flash.Config
+    opts = {
+      -- Extends f/t/F/T with labels and makes ;/, repeat across lines. Set
+      -- `enabled = false` here if the extra highlighting reads as noisy.
+      modes = { char = { enabled = true } },
+    },
+    keys = {
+      {
+        's',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').jump()
+        end,
+        desc = 'Flash jump',
+      },
+      {
+        'S',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').treesitter()
+        end,
+        desc = 'Flash treesitter select',
+      },
+      {
+        'r',
+        mode = 'o',
+        function()
+          require('flash').remote()
+        end,
+        desc = 'Remote flash (operator)',
+      },
+      {
+        'R',
+        mode = { 'o', 'x' },
+        function()
+          require('flash').treesitter_search()
+        end,
+        desc = 'Flash treesitter search',
+      },
+      {
+        '<C-s>',
+        mode = 'c',
+        function()
+          require('flash').toggle()
+        end,
+        desc = 'Toggle flash search',
+      },
     },
   },
 
